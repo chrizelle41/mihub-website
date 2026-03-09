@@ -1,5 +1,5 @@
 import { useState } from "react";
-import emailjs from "emailjs-com";
+import emailjs from "@emailjs/browser";
 import { motion } from "framer-motion";
 
 export default function Contact() {
@@ -31,21 +31,20 @@ export default function Contact() {
         "YOUR_SERVICE_ID",
         "YOUR_TEMPLATE_ID",
         templateParams,
-        "YOUR_PUBLIC_KEY"
+        "YOUR_PUBLIC_KEY",
       )
       .then(
         () => {
           setStatus("success");
           setForm({ firstName: "", lastName: "", email: "", message: "" });
         },
-        () => setStatus("error")
+        () => setStatus("error"),
       );
   };
 
   return (
     <div className="min-h-screen bg-white pt-32 pb-20 text-gray-700">
       <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-16">
-
         {/* LEFT SIDE */}
         <div className="space-y-6">
           <h1 className="text-4xl md:text-5xl font-extrabold text-[#2385BE]">
