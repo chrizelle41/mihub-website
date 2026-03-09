@@ -4,7 +4,7 @@ import { Mail, Linkedin } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-br from-[#2385BE] to-[#4FB4DE] text-white py-16 px-6 mt-0">
+    <footer className="relative z-10 bg-gradient-to-br from-[#2385BE] to-[#4FB4DE] text-white py-16 px-6 mt-0">
       
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
 
@@ -37,7 +37,7 @@ export default function Footer() {
 
             {/* Email icon */}
             <a
-              href="mailto:nour.ragab@virtualviewing.com"
+              href="mailto:info@mihub.ai"
               className="p-3 bg-white/20 hover:bg-white/30 rounded-full transition-all"
               title="Email MiHub"
             >
@@ -48,6 +48,7 @@ export default function Footer() {
             <a
               href="https://www.linkedin.com/company/mihub-ai/"
               target="_blank"
+              rel="noopener noreferrer"
               className="p-3 bg-white/20 hover:bg-white/30 rounded-full transition-all"
               title="MiHub on LinkedIn"
             >

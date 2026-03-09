@@ -10,25 +10,29 @@ import Residential from "./pages/Residential";
 import PropertyManagement from "./pages/PropertyManagement";
 import DataRoom from "./pages/DataRoom";
 import WhyMihub from "./pages/WhyMihub";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
 
 function App() {
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/Shared/Internal/MiHub" element={<Home />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/construction" element={<Construction />} />
-        <Route path="/residential" element={<Residential />} />
-        <Route path="/property-management" element={<PropertyManagement />} />
-        <Route path="/dataroom" element={<DataRoom />} />
-        <Route path="/why-mihub" element={<WhyMihub />} />
-      </Routes>
-
+      <main className="flex-1">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/Shared/Internal/MiHub" element={<Home />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/construction" element={<Construction />} />
+          <Route path="/residential" element={<Residential />} />
+          <Route path="/property-management" element={<PropertyManagement />} />
+          <Route path="/dataroom" element={<DataRoom />} />
+          <Route path="/why-mihub" element={<WhyMihub />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
+        </Routes>
+      </main>
       <Footer />
-    </>
+    </div>
   );
 }
 

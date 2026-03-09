@@ -25,6 +25,7 @@ import {
   FolderOpen,
 } from "lucide-react";
 import ScrollBackground from "../components/ScrollBackground";
+import bldgVideo from "../assets/bldg.mp4";
 
 /* ----- Decorative & visual components ----- */
 function GradientOrb({ className = "", size = 400, delay = 0, cyan = true }) {
@@ -123,7 +124,7 @@ const smoothReveal = {
   transition: { duration: 0.85, ease: [0.25, 0.1, 0.25, 1] },
 };
 
-function AnimatedSection({ children, className = "" }) {
+function AnimatedSection({ children, className = "", style }) {
   const ref = useRef(null);
   const isInView = useInView(ref, {
     once: true,
@@ -134,6 +135,7 @@ function AnimatedSection({ children, className = "" }) {
     <motion.section
       ref={ref}
       className={className}
+      style={style}
       initial={{ opacity: 0, y: 56 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.9, ease: [0.25, 0.1, 0.25, 1] }}
@@ -366,30 +368,55 @@ export default function Home() {
           </motion.p>
         </AnimatedSection>
 
-        {/* The Digital Twin */}
-        <AnimatedSection className="min-h-screen flex flex-col justify-center items-center px-6 md:px-20 py-20 relative">
-          <GradientOrb className="top-1/3 -right-32" size={340} delay={0.1} />
+        {/* The Digital Twin — black section: full viewport width, title with glow, text left, video right */}
+        <AnimatedSection
+          className="min-h-screen flex flex-col justify-center px-6 md:px-20 py-20 relative bg-black"
+          style={{ width: "100vw", marginLeft: "calc(50% - 50vw)" }}
+        >
           <motion.h2
-            className="font-story-title font-bold mb-6 text-center text-white"
+            className="font-story-title font-bold mb-6 md:mb-8 text-center w-full text-white"
+            style={{
+              textShadow:
+                "0 0 20px rgba(34,211,238,0.6), 0 0 40px rgba(34,211,238,0.4), 0 0 60px rgba(34,211,238,0.25), 0 0 80px rgba(34,211,238,0.15)",
+            }}
             {...smoothReveal}
           >
             The Digital Twin
           </motion.h2>
+          <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-stretch">
+            <motion.div className="flex flex-col justify-center order-2 lg:order-1" {...smoothReveal}>
+              <p className="font-story-body text-white/90 leading-relaxed text-lg md:text-xl max-w-xl">
+                MiHub gives you more than just day-to-day management. MiHub is your
+                starting point for creating your building's digital twin.
+              </p>
+            </motion.div>
+            <motion.div
+              className="relative w-full min-h-[500px] sm:min-h-[600px] md:min-h-[700px] lg:min-h-[800px] xl:min-h-[90vh] order-1 lg:order-2 overflow-hidden bg-black"
+              {...smoothReveal}
+            >
+              <video
+                src={bldgVideo}
+                className="absolute inset-0 w-full h-full object-contain"
+                playsInline
+                muted
+                loop
+                autoPlay
+                aria-label="Building digital twin"
+              />
+            </motion.div>
+          </div>
+        </AnimatedSection>
+
+        {/* Why is this important? — cyan section only */}
+        <AnimatedSection className="min-h-screen flex flex-col justify-center items-center px-6 md:px-20 py-20 relative bg-gradient-to-br from-cyan-900/95 via-[#0c8db6] to-cyan-800/95">
           <motion.p
-            className="max-w-2xl text-center font-story-body text-white/85 mb-10"
-            {...smoothReveal}
-          >
-            MiHub gives you more than just day-to-day management. MiHub is your
-            starting point for creating your building's digital twin.
-          </motion.p>
-          <motion.p
-            className="text-cyan-200 font-story-body font-medium mb-8"
+            className="text-white font-story-body font-semibold mb-10 text-center"
             {...smoothReveal}
           >
             Why is this important?
           </motion.p>
           <motion.div
-            className="w-full max-w-2xl mx-auto min-h-[220px] flex flex-col items-center justify-center rounded-3xl bg-gradient-to-br from-white/10 to-white/5 border border-white/15 p-8 md:p-12"
+            className="w-full max-w-2xl mx-auto min-h-[220px] flex flex-col items-center justify-center rounded-3xl bg-white/10 border border-white/20 p-8 md:p-12 backdrop-blur-sm"
             {...smoothReveal}
           >
             <div className="flex items-center justify-center gap-4 mb-4">
@@ -400,7 +427,7 @@ export default function Home() {
                     <AnimatedIcon>
                       <Icon
                         size={40}
-                        className="text-cyan-400 flex-shrink-0"
+                        className="text-white flex-shrink-0"
                         strokeWidth={1.5}
                       />
                     </AnimatedIcon>
@@ -415,14 +442,14 @@ export default function Home() {
                 <button
                   key={i}
                   onClick={() => setDigitalTwinIndex(i)}
-                  className={`h-2 rounded-full transition-all ${i === digitalTwinIndex ? "bg-cyan-400 w-8" : "w-2 bg-white/30 hover:bg-white/50"}`}
+                  className={`h-2 rounded-full transition-all ${i === digitalTwinIndex ? "bg-white w-8" : "w-2 bg-white/40 hover:bg-white/60"}`}
                   aria-label={`View item ${i + 1}`}
                 />
               ))}
             </div>
           </motion.div>
           <motion.p
-            className="mt-10 max-w-2xl text-center font-story-body text-white/80"
+            className="mt-10 max-w-2xl text-center font-story-body text-white/90"
             {...smoothReveal}
           >
             It'll even help you at the time of transaction by being an

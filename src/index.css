@@ -23,6 +23,11 @@
   line-height: 1.5;
 }
 
+/* Full-width sections: prevent horizontal scroll from 100vw */
+html, body {
+  overflow-x: hidden;
+}
+
 /* Apple-style smooth scroll + account for fixed nav */
 html {
   scroll-behavior: smooth;
