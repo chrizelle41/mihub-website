@@ -15,3 +15,13 @@ The React Compiler is not enabled on this template because of its impact on dev 
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
 # mihub-website
+
+## Deploy (for teammate)
+
+**You can give either:** the full project (so they can change env and rebuild) **or** a readymade `dist/` folder (faster, but env is already baked in).
+
+**Why images/resources broke last time:** The app is built with a base path. If it does not match where the site is served, every asset (images, JS, CSS) 404s. This build uses base `/`, so it **must be deployed at the root** of the domain (e.g. `https://mihub.ai/`), not in a subfolder.
+
+**If you give readymade dist:** (1) You run `npm run build`, then zip the **contents** of `dist/` (zip should contain `index.html` and `assets/` at top level). (2) Teammate uploads that and deploys at the **root** of the domain (no subfolder). (3) Host must serve `index.html` for all routes (SPA fallback) so `/contact` etc. work.
+
+**If you give the full project:** Teammate copies `.env.example` to `.env`, fills it in, runs `npm install` and `npm run build`, then deploys `dist/` at the **root** of the domain. Same SPA fallback requirement.

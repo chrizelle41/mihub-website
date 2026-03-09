@@ -28,6 +28,7 @@ import {
 import ScrollBackground from "../components/ScrollBackground";
 import bldgVideo from "../assets/bldg.mp4";
 import heroVideo from "../assets/bgvid.mp4";
+import dataRoomImage from "../assets/dataRoom.png";
 
 const SECTION_INNER = "w-full max-w-5xl mx-auto px-6";
 
@@ -445,9 +446,9 @@ export default function Home() {
           </ScrollSection>
 
           {/* ========== The Data Room ========== */}
-          <ScrollSection bgClass={getSectionBg(7)}>
+          <ScrollSection bgClass="bg-black">
             <CircuitLines />
-            <div className="relative text-center">
+            <div className="relative text-center flex flex-col items-center gap-8">
               <Orb className="-left-40 top-0" />
               <GridOverlay />
               <FadeUp>
@@ -455,8 +456,15 @@ export default function Home() {
                   The Data Room — Live. Intelligent. Always current.
                 </h2>
               </FadeUp>
+              <FadeUp className="w-full flex justify-center">
+                <img
+                  src={dataRoomImage}
+                  alt="Data Room"
+                  className="w-full max-w-md h-auto object-contain"
+                />
+              </FadeUp>
               <FadeUp>
-                <p className="mt-8 text-xl md:text-2xl lg:text-3xl text-white/85 max-w-4xl mx-auto leading-relaxed">
+                <p className="text-xl md:text-2xl lg:text-3xl text-white/85 max-w-4xl mx-auto leading-relaxed">
                   A constantly updating data room for your building. Every
                   document, drawing, log, sensor reading, and report,
                   automatically organised, securely stored, and continuously
