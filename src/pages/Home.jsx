@@ -70,7 +70,11 @@ function VisualPanel({ icon: Icon, label, className = "" }) {
       <div className="aspect-video flex items-center justify-center relative">
         <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/25 via-transparent to-blue-600/25" />
         <AnimatedIcon className="relative z-10">
-          <Icon size={64} className="text-cyan-400/90 drop-shadow-[0_0_20px_rgba(34,211,238,0.4)]" strokeWidth={1.2} />
+          <Icon
+            size={64}
+            className="text-cyan-400/90 drop-shadow-[0_0_20px_rgba(34,211,238,0.4)]"
+            strokeWidth={1.2}
+          />
         </AnimatedIcon>
       </div>
       {label ? (
@@ -160,8 +164,42 @@ function SectionDivider() {
 
 export default function Home() {
   const [digitalTwinIndex, setDigitalTwinIndex] = useState(0);
-  const whyMihubRef = useRef(null);
-  const whyMihubInView = useInView(whyMihubRef, { once: true, amount: 0.2 });
+  const [scrollY, setScrollY] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState(
+    typeof window !== "undefined" ? window.innerHeight : 800,
+  );
+  const heroVideoRef = useRef(null);
+
+  useEffect(() => {
+    const update = () => {
+      setScrollY(window.scrollY);
+      setViewportHeight(window.innerHeight);
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+
+  // Scrub hero video with scroll (first section only)
+  const heroScrollProgress = Math.min(scrollY / viewportHeight, 1);
+  useEffect(() => {
+    const video = heroVideoRef.current;
+    if (!video || !video.duration || !isFinite(video.duration)) return;
+    video.currentTime = heroScrollProgress * video.duration;
+  }, [heroScrollProgress]);
+
+  // First section: video at 100% opacity. Past first section: fade out into transition
+  const heroVideoOpacity =
+    scrollY <= viewportHeight
+      ? 1
+      : Math.max(0, 1 - (scrollY - viewportHeight) / (viewportHeight * 0.5));
+  // Why MiHub fades in as you scroll into the second section
+  const pastFirstSection = Math.max(0, scrollY - viewportHeight);
+  const whyMihubFade = Math.min(1, pastFirstSection / (viewportHeight * 0.4));
 
   useEffect(() => {
     const t = setInterval(() => {
@@ -203,7 +241,11 @@ export default function Home() {
           />
           <div className="absolute inset-0 z-[1] bg-gradient-to-b from-[#0c8db6]/20 via-transparent to-[#0c8db6]/15" />
           <GradientOrb className="-top-40 -left-40 z-[2]" size={500} />
-          <GradientOrb className="-bottom-40 -right-40 z-[2]" size={450} delay={0.2} />
+          <GradientOrb
+            className="-bottom-40 -right-40 z-[2]"
+            size={450}
+            delay={0.2}
+          />
           <motion.span
             className="relative z-10 text-cyan-300/90 text-sm font-medium uppercase tracking-[0.3em] mb-6"
             initial={{ opacity: 0, y: 12 }}
@@ -216,7 +258,11 @@ export default function Home() {
             className="relative z-10 font-story-headline font-bold mb-6 tracking-tight max-w-5xl text-white drop-shadow-[0_0_40px_rgba(34,211,238,0.15)]"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+            transition={{
+              duration: 1.2,
+              delay: 0.1,
+              ease: [0.25, 0.1, 0.25, 1],
+            }}
           >
             MiHub – the world's most advanced real estate AI platform
           </motion.h1>
@@ -230,7 +276,11 @@ export default function Home() {
             className="relative z-10 max-w-2xl font-story-lead text-white/90 font-light"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.9, delay: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+            transition={{
+              duration: 0.9,
+              delay: 0.5,
+              ease: [0.25, 0.1, 0.25, 1],
+            }}
           >
             See everything about your building. Yesterday, today, and tomorrow.
           </motion.p>
@@ -240,28 +290,68 @@ export default function Home() {
 
         {/* WHY MIHUB */}
         <AnimatedSection className="min-h-screen flex flex-col justify-center items-center px-6 md:px-20 text-center relative">
-          <div ref={whyMihubRef} className="absolute top-1/3 left-0 w-full h-1" aria-hidden />
-          <div className="absolute inset-0 z-0 opacity-[0.05]" style={{ backgroundImage: "linear-gradient(rgba(34,211,238,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.8) 1px, transparent 1px)", backgroundSize: "64px 64px" }} aria-hidden />
-          <div className="absolute top-20 left-10 w-32 h-32 rounded-full bg-cyan-500/10 blur-3xl" aria-hidden />
-          <div className="absolute bottom-20 right-10 w-40 h-40 rounded-full bg-cyan-400/10 blur-3xl" aria-hidden />
-          <GradientOrb className="-top-20 right-0 z-[1]" size={280} delay={0.1} cyan={false} />
-          <motion.span className="relative z-10 text-cyan-300/80 text-xs font-medium uppercase tracking-[0.25em] mb-4" {...smoothReveal}>Why choose us</motion.span>
+          <div
+            ref={whyMihubRef}
+            className="absolute top-1/3 left-0 w-full h-1"
+            aria-hidden
+          />
+          <div
+            className="absolute inset-0 z-0 opacity-[0.05]"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(34,211,238,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.8) 1px, transparent 1px)",
+              backgroundSize: "64px 64px",
+            }}
+            aria-hidden
+          />
+          <div
+            className="absolute top-20 left-10 w-32 h-32 rounded-full bg-cyan-500/10 blur-3xl"
+            aria-hidden
+          />
+          <div
+            className="absolute bottom-20 right-10 w-40 h-40 rounded-full bg-cyan-400/10 blur-3xl"
+            aria-hidden
+          />
+          <GradientOrb
+            className="-top-20 right-0 z-[1]"
+            size={280}
+            delay={0.1}
+            cyan={false}
+          />
+          <motion.span
+            className="relative z-10 text-cyan-300/80 text-xs font-medium uppercase tracking-[0.25em] mb-4"
+            {...smoothReveal}
+          >
+            Why choose us
+          </motion.span>
           <motion.div
             className="max-w-4xl relative z-10 p-8 md:p-12 rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: whyMihubInView ? 1 : 0 }}
             transition={{ duration: 0.6 }}
-            style={{ boxShadow: "0 0 0 1px rgba(34,211,238,0.08), 0 0 60px rgba(0,0,0,0.2)" }}
+            style={{
+              boxShadow:
+                "0 0 0 1px rgba(34,211,238,0.08), 0 0 60px rgba(0,0,0,0.2)",
+            }}
           >
-            <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-cyan-400/40 rounded-tl-lg" aria-hidden />
-            <div className="absolute bottom-4 right-4 w-8 h-8 border-r-2 border-b-2 border-cyan-400/40 rounded-br-lg" aria-hidden />
+            <div
+              className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-cyan-400/40 rounded-tl-lg"
+              aria-hidden
+            />
+            <div
+              className="absolute bottom-4 right-4 w-8 h-8 border-r-2 border-b-2 border-cyan-400/40 rounded-br-lg"
+              aria-hidden
+            />
             <motion.h2
               className="font-story-headline font-bold mb-8 text-white leading-tight"
               {...smoothReveal}
             >
               Why MiHub
             </motion.h2>
-            <motion.div className="w-20 h-0.5 bg-gradient-to-r from-cyan-400/60 to-transparent rounded-full mb-8 mx-auto" {...smoothReveal} />
+            <motion.div
+              className="w-20 h-0.5 bg-gradient-to-r from-cyan-400/60 to-transparent rounded-full mb-8 mx-auto"
+              {...smoothReveal}
+            />
             <motion.p
               className="max-w-2xl font-story-body text-white/85 mb-4 mx-auto"
               {...smoothReveal}
@@ -293,7 +383,8 @@ export default function Home() {
               style={{
                 width: "70vmax",
                 height: "70vmax",
-                background: "radial-gradient(circle, rgba(34,211,238,0.4) 0%, transparent 70%)",
+                background:
+                  "radial-gradient(circle, rgba(34,211,238,0.4) 0%, transparent 70%)",
                 left: "50%",
                 top: "50%",
                 x: "-50%",
@@ -310,7 +401,8 @@ export default function Home() {
               style={{
                 width: "50vmax",
                 height: "50vmax",
-                background: "radial-gradient(circle, rgba(56,189,248,0.35) 0%, transparent 65%)",
+                background:
+                  "radial-gradient(circle, rgba(56,189,248,0.35) 0%, transparent 65%)",
                 right: "10%",
                 top: "30%",
               }}
@@ -325,7 +417,8 @@ export default function Home() {
               style={{
                 width: "40vmax",
                 height: "40vmax",
-                background: "radial-gradient(circle, rgba(34,211,238,0.3) 0%, transparent 70%)",
+                background:
+                  "radial-gradient(circle, rgba(34,211,238,0.3) 0%, transparent 70%)",
                 left: "5%",
                 bottom: "20%",
               }}
@@ -357,8 +450,8 @@ export default function Home() {
               style={{
                 width: 4 + (i % 3) * 2,
                 height: 4 + (i % 3) * 2,
-                left: `${10 + (i * 7) % 80}%`,
-                top: `${15 + (i * 11) % 70}%`,
+                left: `${10 + ((i * 7) % 80)}%`,
+                top: `${15 + ((i * 11) % 70)}%`,
               }}
               animate={{
                 y: [0, -30, 0],
@@ -374,18 +467,25 @@ export default function Home() {
             />
           ))}
           <div className="relative z-10 w-full max-w-4xl mx-auto">
-            <motion.span className="block text-center text-cyan-300/80 text-xs font-medium uppercase tracking-[0.25em] mb-6" {...smoothReveal}>One platform</motion.span>
+            <motion.span
+              className="block text-center text-cyan-300/80 text-xs font-medium uppercase tracking-[0.25em] mb-6"
+              {...smoothReveal}
+            >
+              One platform
+            </motion.span>
             <motion.div
               className="relative rounded-2xl border border-white/20 bg-white/[0.05] backdrop-blur-xl px-8 md:px-12 py-10 md:py-14"
               {...smoothReveal}
               style={{
-                boxShadow: "0 0 0 1px rgba(34,211,238,0.15), 0 0 80px rgba(34,211,238,0.06), inset 0 1px 0 rgba(255,255,255,0.08)",
+                boxShadow:
+                  "0 0 0 1px rgba(34,211,238,0.12), 0 0 60px rgba(34,211,238,0.08), inset 0 1px 0 rgba(255,255,255,0.05)",
               }}
             >
               <motion.h2
                 className="font-story-title font-bold mb-4"
                 style={{
-                  background: "linear-gradient(135deg, #fff 0%, rgba(34,211,238,0.95) 50%, #e0f7fa 100%)",
+                  background:
+                    "linear-gradient(135deg, #fff 0%, rgba(34,211,238,0.95) 50%, #e0f7fa 100%)",
                   backgroundClip: "text",
                   WebkitBackgroundClip: "text",
                   color: "transparent",
@@ -398,15 +498,20 @@ export default function Home() {
               <motion.div
                 className="w-48 md:w-64 h-0.5 rounded-full mx-auto mb-8 bg-gradient-to-r from-transparent via-cyan-400/90 to-transparent"
                 {...smoothReveal}
-                style={{ boxShadow: "0 0 24px rgba(34,211,238,0.4)" }}
+                style={{
+                  boxShadow:
+                    "0 0 20px rgba(34,211,238,0.5), 0 0 40px rgba(34,211,238,0.2)",
+                  background:
+                    "linear-gradient(90deg, transparent 0%, rgba(34,211,238,0.9) 20%, rgba(34,211,238,1) 50%, rgba(34,211,238,0.9) 80%, transparent 100%)",
+                }}
               />
               <motion.p
                 className="max-w-3xl mx-auto font-story-body text-white/85 mb-5 leading-relaxed"
                 {...smoothReveal}
               >
                 Buildings are complex. They produce a lot of data. All too often
-                that data is inaccessible, or there is simply so much information
-                that it becomes overwhelming.
+                that data is inaccessible, or there is simply so much
+                information that it becomes overwhelming.
               </motion.p>
               <motion.p
                 className="max-w-3xl mx-auto font-story-body font-medium text-cyan-200/95"
@@ -415,8 +520,8 @@ export default function Home() {
                   textShadow: "0 0 30px rgba(34,211,238,0.15)",
                 }}
               >
-                MiHub lets you cut through the noise to see and understand the data
-                that you need to know.
+                MiHub lets you cut through the noise to see and understand the
+                data that you need to know.
               </motion.p>
             </motion.div>
           </div>
@@ -426,11 +531,35 @@ export default function Home() {
 
         {/* Open API — with visuals */}
         <AnimatedSection className="section-bleed-right min-h-screen flex flex-col justify-center items-center px-6 md:px-20 py-20 relative bg-black/95">
-          <div className="absolute inset-0 z-0 opacity-[0.05]" style={{ backgroundImage: "linear-gradient(rgba(34,211,238,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.8) 1px, transparent 1px)", backgroundSize: "56px 56px" }} aria-hidden />
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-px h-1/2 bg-gradient-to-b from-transparent via-cyan-400/30 to-transparent" aria-hidden />
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 w-px h-1/2 bg-gradient-to-b from-transparent via-cyan-400/30 to-transparent" aria-hidden />
-          <GradientOrb className="-right-40 top-1/4 z-[1]" size={320} delay={0.15} cyan={false} />
-          <motion.span className="relative z-10 text-cyan-300/80 text-xs font-medium uppercase tracking-[0.25em] mb-4" {...smoothReveal}>Integrations</motion.span>
+          <div
+            className="absolute inset-0 z-0 opacity-[0.05]"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(34,211,238,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.8) 1px, transparent 1px)",
+              backgroundSize: "56px 56px",
+            }}
+            aria-hidden
+          />
+          <div
+            className="absolute left-0 top-1/2 -translate-y-1/2 w-px h-1/2 bg-gradient-to-b from-transparent via-cyan-400/30 to-transparent"
+            aria-hidden
+          />
+          <div
+            className="absolute right-0 top-1/2 -translate-y-1/2 w-px h-1/2 bg-gradient-to-b from-transparent via-cyan-400/30 to-transparent"
+            aria-hidden
+          />
+          <GradientOrb
+            className="-right-40 top-1/4 z-[1]"
+            size={320}
+            delay={0.15}
+            cyan={false}
+          />
+          <motion.span
+            className="relative z-10 text-cyan-300/80 text-xs font-medium uppercase tracking-[0.25em] mb-4"
+            {...smoothReveal}
+          >
+            Integrations
+          </motion.span>
           <motion.h2
             className="font-story-title font-bold text-center mb-8 max-w-3xl text-white relative z-10"
             {...smoothReveal}
@@ -478,13 +607,36 @@ export default function Home() {
 
         {/* Every feature, powered by our own AI */}
         <AnimatedSection className="section-bleed-right min-h-screen flex flex-col justify-center items-center px-6 md:px-20 text-center relative bg-black/95">
-          <div className="absolute inset-0 z-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(circle at 30% 50%, rgba(34,211,238,0.08) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(34,211,238,0.06) 0%, transparent 50%)" }} aria-hidden />
-          <GradientOrb className="-left-40 bottom-1/4 z-[1]" size={320} cyan={false} />
+          <div
+            className="absolute inset-0 z-0 opacity-[0.04]"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 30% 50%, rgba(34,211,238,0.08) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(34,211,238,0.06) 0%, transparent 50%)",
+            }}
+            aria-hidden
+          />
+          <GradientOrb
+            className="-left-40 bottom-1/4 z-[1]"
+            size={320}
+            cyan={false}
+          />
           <div className="max-w-md mx-auto mb-8 relative">
-            <div className="absolute -inset-2 rounded-3xl bg-gradient-to-br from-cyan-500/20 to-transparent opacity-60 blur-xl" aria-hidden />
-            <VisualPanel icon={Brain} label="" className="max-w-md mx-auto relative" />
+            <div
+              className="absolute -inset-2 rounded-3xl bg-gradient-to-br from-cyan-500/20 to-transparent opacity-60 blur-xl"
+              aria-hidden
+            />
+            <VisualPanel
+              icon={Brain}
+              label=""
+              className="max-w-md mx-auto relative"
+            />
           </div>
-          <motion.span className="relative z-10 text-cyan-300/80 text-xs font-medium uppercase tracking-[0.25em] mb-4 block" {...smoothReveal}>AI engine</motion.span>
+          <motion.span
+            className="relative z-10 text-cyan-300/80 text-xs font-medium uppercase tracking-[0.25em] mb-4 block"
+            {...smoothReveal}
+          >
+            AI engine
+          </motion.span>
           <motion.h2
             className="font-story-headline font-bold mb-8 text-white max-w-4xl relative z-10"
             {...smoothReveal}
@@ -512,9 +664,25 @@ export default function Home() {
 
         {/* The Digital Twin — black section: full width, title with glow, text left, video right */}
         <AnimatedSection className="section-bleed-right min-h-screen flex flex-col justify-center px-6 md:px-20 py-20 relative bg-black w-full">
-          <div className="absolute inset-0 z-0 opacity-[0.05]" style={{ backgroundImage: "linear-gradient(rgba(34,211,238,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.8) 1px, transparent 1px)", backgroundSize: "64px 64px" }} aria-hidden />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent opacity-60" aria-hidden />
-          <motion.span className="relative z-10 text-cyan-300/80 text-xs font-medium uppercase tracking-[0.25em] mb-4 text-center block" {...smoothReveal}>Digital twin</motion.span>
+          <div
+            className="absolute inset-0 z-0 opacity-[0.05]"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(34,211,238,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.8) 1px, transparent 1px)",
+              backgroundSize: "64px 64px",
+            }}
+            aria-hidden
+          />
+          <div
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent opacity-60"
+            aria-hidden
+          />
+          <motion.span
+            className="relative z-10 text-cyan-300/80 text-xs font-medium uppercase tracking-[0.25em] mb-4 text-center block"
+            {...smoothReveal}
+          >
+            Digital twin
+          </motion.span>
           <motion.h2
             className="font-story-title font-bold mb-6 md:mb-8 text-center w-full text-white relative z-10"
             style={{
@@ -525,30 +693,34 @@ export default function Home() {
           >
             The Digital Twin
           </motion.h2>
-          <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-center relative z-10">
-            <motion.div className="flex flex-col justify-center order-2 lg:order-1" {...smoothReveal}>
-              <div className="pl-4 border-l-2 border-cyan-400/40">
-                <p className="font-story-body text-white/90 leading-relaxed text-lg md:text-xl max-w-xl">
-                  MiHub gives you more than just day-to-day management. MiHub is your
-                  starting point for creating your building's digital twin.
-                </p>
-              </div>
+          <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-center">
+            <motion.div
+              className="flex flex-col justify-center order-2 lg:order-1"
+              {...smoothReveal}
+            >
+              <p className="font-story-body text-white/90 leading-relaxed text-lg md:text-xl max-w-xl">
+                MiHub gives you more than just day-to-day management. MiHub is
+                your starting point for creating your building's digital twin.
+              </p>
             </motion.div>
             <motion.div
               className="relative w-full h-[320px] sm:h-[380px] md:h-[440px] lg:h-[420px] xl:h-[480px] order-1 lg:order-2 overflow-hidden flex-shrink-0 rounded-2xl border border-white/10 p-1"
               {...smoothReveal}
-              style={{ boxShadow: "0 0 0 1px rgba(34,211,238,0.15), 0 0 60px rgba(34,211,238,0.08)" }}
+              style={{
+                boxShadow:
+                  "0 0 0 1px rgba(34,211,238,0.15), 0 0 60px rgba(34,211,238,0.08)",
+              }}
             >
               <div className="absolute inset-0 rounded-xl overflow-hidden">
-              <video
-                src={bldgVideo}
-                className="absolute inset-0 w-full h-full object-contain"
-                playsInline
-                muted
-                loop
-                autoPlay
-                aria-label="Building digital twin"
-              />
+                <video
+                  src={bldgVideo}
+                  className="absolute inset-0 w-full h-full object-contain"
+                  playsInline
+                  muted
+                  loop
+                  autoPlay
+                  aria-label="Building digital twin"
+                />
               </div>
             </motion.div>
           </div>
@@ -558,8 +730,21 @@ export default function Home() {
 
         {/* Why is this important? — cyan section only, larger */}
         <AnimatedSection className="section-bleed-right min-h-screen flex flex-col justify-center items-center px-6 md:px-20 py-24 md:py-32 relative bg-gradient-to-br from-cyan-900/95 via-[#0c8db6] to-cyan-800/95 w-full overflow-hidden">
-          <div className="absolute inset-0 z-0 opacity-30" style={{ backgroundImage: "radial-gradient(circle at 20% 80%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px)", backgroundSize: "48px 48px" }} aria-hidden />
-          <motion.span className="relative z-10 text-white/90 text-xs font-medium uppercase tracking-[0.25em] mb-4" {...smoothReveal}>Compliance & risk</motion.span>
+          <div
+            className="absolute inset-0 z-0 opacity-30"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 20% 80%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px)",
+              backgroundSize: "48px 48px",
+            }}
+            aria-hidden
+          />
+          <motion.span
+            className="relative z-10 text-white/90 text-xs font-medium uppercase tracking-[0.25em] mb-4"
+            {...smoothReveal}
+          >
+            Compliance & risk
+          </motion.span>
           <motion.p
             className="text-white font-story-title font-semibold mb-12 md:mb-14 text-center relative z-10"
             {...smoothReveal}
@@ -569,7 +754,10 @@ export default function Home() {
           <motion.div
             className="w-full max-w-3xl mx-auto min-h-[260px] md:min-h-[300px] flex flex-col items-center justify-center rounded-3xl bg-white/10 border border-white/25 p-10 md:p-14 backdrop-blur-sm relative z-10"
             {...smoothReveal}
-            style={{ boxShadow: "0 0 0 1px rgba(255,255,255,0.2), 0 0 80px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.2)" }}
+            style={{
+              boxShadow:
+                "0 0 0 1px rgba(255,255,255,0.2), 0 0 80px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.2)",
+            }}
           >
             <div className="flex items-center justify-center gap-5 mb-5">
               {digitalTwinIcons[digitalTwinIndex] &&
@@ -613,11 +801,28 @@ export default function Home() {
 
         {/* For Building Managers */}
         <AnimatedSection className="section-bleed-right min-h-screen flex flex-col justify-center items-center px-6 md:px-20 text-center relative bg-black/95">
-          <div className="absolute inset-0 z-0 opacity-[0.04]" style={{ backgroundImage: "linear-gradient(rgba(34,211,238,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.8) 1px, transparent 1px)", backgroundSize: "72px 72px" }} aria-hidden />
-          <GradientOrb className="-left-32 bottom-1/3 z-[1]" size={280} cyan={false} />
-          <motion.div className="relative z-10 flex items-center justify-center gap-3 mb-6" {...smoothReveal}>
+          <div
+            className="absolute inset-0 z-0 opacity-[0.04]"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(34,211,238,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.8) 1px, transparent 1px)",
+              backgroundSize: "72px 72px",
+            }}
+            aria-hidden
+          />
+          <GradientOrb
+            className="-left-32 bottom-1/3 z-[1]"
+            size={280}
+            cyan={false}
+          />
+          <motion.div
+            className="relative z-10 flex items-center justify-center gap-3 mb-6"
+            {...smoothReveal}
+          >
             <Building2 className="text-cyan-400/80" size={28} />
-            <motion.span className="text-cyan-300/80 text-xs font-medium uppercase tracking-[0.25em]">For teams</motion.span>
+            <motion.span className="text-cyan-300/80 text-xs font-medium uppercase tracking-[0.25em]">
+              For teams
+            </motion.span>
           </motion.div>
           <motion.h2
             className="font-story-title font-bold mb-8 text-white max-w-4xl relative z-10"
@@ -641,18 +846,42 @@ export default function Home() {
 
         {/* The Data Room */}
         <AnimatedSection className="section-bleed-right min-h-screen flex flex-col justify-center items-center px-6 md:px-20 py-20 text-center relative bg-black/95">
-          <div className="absolute inset-0 z-0 opacity-[0.04]" style={{ backgroundImage: "linear-gradient(rgba(34,211,238,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.6) 1px, transparent 1px)", backgroundSize: "48px 48px" }} aria-hidden />
-          <div className="absolute top-1/4 right-8 w-2 h-2 rounded-full bg-cyan-400 animate-pulse" aria-hidden title="Live" />
-          <GradientOrb className="-right-40 bottom-1/4 z-[1]" size={320} cyan={false} />
+          <div
+            className="absolute inset-0 z-0 opacity-[0.04]"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(34,211,238,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.6) 1px, transparent 1px)",
+              backgroundSize: "48px 48px",
+            }}
+            aria-hidden
+          />
+          <div
+            className="absolute top-1/4 right-8 w-2 h-2 rounded-full bg-cyan-400 animate-pulse"
+            aria-hidden
+            title="Live"
+          />
+          <GradientOrb
+            className="-right-40 bottom-1/4 z-[1]"
+            size={320}
+            cyan={false}
+          />
           <div className="max-w-md mx-auto mb-8 relative">
-            <div className="absolute -inset-3 rounded-2xl bg-cyan-500/10 blur-2xl" aria-hidden />
+            <div
+              className="absolute -inset-3 rounded-2xl bg-cyan-500/10 blur-2xl"
+              aria-hidden
+            />
             <VisualPanel
               icon={FolderOpen}
               label=""
               className="max-w-md mx-auto relative"
             />
           </div>
-          <motion.span className="relative z-10 text-cyan-300/80 text-xs font-medium uppercase tracking-[0.25em] mb-4 block" {...smoothReveal}>Data room</motion.span>
+          <motion.span
+            className="relative z-10 text-cyan-300/80 text-xs font-medium uppercase tracking-[0.25em] mb-4 block"
+            {...smoothReveal}
+          >
+            Data room
+          </motion.span>
           <motion.h2
             className="font-story-title font-bold mb-8 text-white relative z-10"
             {...smoothReveal}
@@ -686,9 +915,26 @@ export default function Home() {
 
         {/* Industry Firsts */}
         <AnimatedSection className="min-h-screen flex flex-col justify-center items-center px-6 md:px-20 text-center relative">
-          <div className="absolute inset-0 z-0 opacity-[0.05]" style={{ backgroundImage: "linear-gradient(rgba(34,211,238,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.8) 1px, transparent 1px)", backgroundSize: "80px 80px" }} aria-hidden />
-          <GradientOrb className="-left-40 top-1/4 z-[1]" size={350} delay={0.1} />
-          <motion.span className="relative z-10 text-cyan-300/80 text-xs font-medium uppercase tracking-[0.25em] mb-4" {...smoothReveal}>Industry firsts</motion.span>
+          <div
+            className="absolute inset-0 z-0 opacity-[0.05]"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(34,211,238,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.8) 1px, transparent 1px)",
+              backgroundSize: "80px 80px",
+            }}
+            aria-hidden
+          />
+          <GradientOrb
+            className="-left-40 top-1/4 z-[1]"
+            size={350}
+            delay={0.1}
+          />
+          <motion.span
+            className="relative z-10 text-cyan-300/80 text-xs font-medium uppercase tracking-[0.25em] mb-4"
+            {...smoothReveal}
+          >
+            Industry firsts
+          </motion.span>
           <motion.h2
             className="font-story-title font-bold mb-8 text-white max-w-4xl relative z-10"
             {...smoothReveal}
@@ -729,10 +975,31 @@ export default function Home() {
 
         {/* CTA — What We Can Do For You */}
         <AnimatedSection className="section-bleed-right min-h-screen flex flex-col justify-center items-center px-6 text-center relative bg-black/95 overflow-hidden">
-          <div className="absolute inset-0 z-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(ellipse 80% 50% at 50% 50%, rgba(34,211,238,0.12) 0%, transparent 60%)" }} aria-hidden />
-          <GradientOrb className="-left-40 top-1/2 z-[1]" size={400} cyan={false} />
-          <GradientOrb className="-right-40 bottom-1/2 z-[1]" size={350} delay={0.15} cyan={false} />
-          <motion.span className="relative z-10 text-cyan-300/80 text-xs font-medium uppercase tracking-[0.25em] mb-4" {...smoothReveal}>Get in touch</motion.span>
+          <div
+            className="absolute inset-0 z-0 opacity-[0.04]"
+            style={{
+              backgroundImage:
+                "radial-gradient(ellipse 80% 50% at 50% 50%, rgba(34,211,238,0.12) 0%, transparent 60%)",
+            }}
+            aria-hidden
+          />
+          <GradientOrb
+            className="-left-40 top-1/2 z-[1]"
+            size={400}
+            cyan={false}
+          />
+          <GradientOrb
+            className="-right-40 bottom-1/2 z-[1]"
+            size={350}
+            delay={0.15}
+            cyan={false}
+          />
+          <motion.span
+            className="relative z-10 text-cyan-300/80 text-xs font-medium uppercase tracking-[0.25em] mb-4"
+            {...smoothReveal}
+          >
+            Get in touch
+          </motion.span>
           <motion.h2
             className="font-story-title font-bold mb-8 text-white max-w-3xl relative z-10"
             {...smoothReveal}
@@ -753,9 +1020,7 @@ export default function Home() {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.98 }}
             >
-              <motion.button
-                className="group w-full inline-flex items-center justify-center gap-2 px-10 py-5 font-story-body bg-[#0a0a0f] hover:bg-[#0c0c12] text-white font-semibold rounded-full border border-cyan-400/20 transition-colors"
-              >
+              <motion.button className="group w-full inline-flex items-center justify-center gap-2 px-10 py-5 font-story-body bg-[#0a0a0f] hover:bg-[#0c0c12] text-white font-semibold rounded-full border border-cyan-400/20 transition-colors">
                 Contact Us
                 <ChevronRight
                   size={22}
