@@ -258,8 +258,7 @@ export default function WhyMiHub() {
           </FadeUp>
           <FadeUp>
             <h3 className="mt-24 text-3xl font-bold">
-              Overall Saving:{" "}
-              <span className="text-[#38BDF8]">£125,900</span>
+              Overall Saving: <span className="text-[#38BDF8]">£125,900</span>
             </h3>
           </FadeUp>
         </div>
@@ -282,9 +281,9 @@ export default function WhyMiHub() {
             <p className="mt-10 text-xl md:text-2xl text-white/70 max-w-5xl mx-auto leading-relaxed">
               MiHub empowers teams across technical and non-technical
               disciplines to access BIM and asset data instantly. No more
-              specialist software, no more lengthy training — everything you need
-              is visual, interactive, and accessible through one intelligent
-              interface.
+              specialist software, no more lengthy training — everything you
+              need is visual, interactive, and accessible through one
+              intelligent interface.
             </p>
           </FadeUp>
           <FadeUp>
