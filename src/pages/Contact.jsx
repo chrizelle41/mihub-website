@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Mail, MapPin } from "lucide-react";
+import emailjs from "emailjs-com";
 
 export default function Contact() {
   const [form, setForm] = useState({
@@ -12,48 +13,42 @@ export default function Contact() {
   });
 
   const mapRef = useRef(null);
-
   const [submitStatus, setSubmitStatus] = useState(null); // 'sending' | 'success' | 'error'
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formspreeId = import.meta.env.VITE_FORMSPREE_CONTACT_ID;
-    if (!formspreeId) {
-      setSubmitStatus("error");
-      return;
-    }
     setSubmitStatus("sending");
+
     try {
-      const res = await fetch(`https://formspree.io/f/${formspreeId}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          firstName: form.firstName,
-          lastName: form.lastName,
+      await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID, // Service ID
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID, // Template ID
+        {
+          name: form.firstName + " " + form.lastName,
           email: form.email,
           subject: form.subject,
           message: form.message,
-          _replyto: form.email,
-          _subject: form.subject ? `MiHub Contact: ${form.subject}` : "MiHub Contact Form",
-        }),
+          time: new Date().toLocaleString(),
+        },
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY, // Public Key
+      );
+
+      setSubmitStatus("success");
+      setForm({
+        firstName: "",
+        lastName: "",
+        email: "",
+        subject: "",
+        message: "",
       });
-      const data = await res.json().catch(() => ({}));
-      if (res.ok && data.ok !== false) {
-        setSubmitStatus("success");
-        setForm({ firstName: "", lastName: "", email: "", subject: "", message: "" });
-      } else {
-        setSubmitStatus("error");
-      }
-    } catch {
+    } catch (err) {
+      console.error(err);
       setSubmitStatus("error");
     }
   };
 
-  /* ----------------------------------------------------------
-     DARK MODE MAP STYLE JSON
-  ---------------------------------------------------------- */
   const darkMapStyle = [
     { elementType: "geometry", stylers: [{ color: "#1d1d1d" }] },
     { elementType: "labels.text.stroke", stylers: [{ color: "#1a1a1a" }] },
@@ -102,76 +97,65 @@ export default function Contact() {
 
   const hasMapsKey = Boolean(import.meta.env.VITE_GOOGLE_MAPS_API_KEY);
 
-  /* ----------------------------------------------------------
-     LOAD GOOGLE MAPS (only when API key is set)
-  ---------------------------------------------------------- */
   useEffect(() => {
     if (!hasMapsKey || !mapRef.current) return;
-    let cancelled = false;
-    async function loadMap() {
-      try {
-        const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-        await new Promise((resolve, reject) => {
-          const script = document.createElement("script");
-          script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=marker&loading=async`;
-          script.async = true;
-          script.defer = true;
-          script.onload = resolve;
-          script.onerror = reject;
-          document.body.appendChild(script);
-        });
-        if (cancelled || !mapRef.current) return;
-        const { Map } = await google.maps.importLibrary("maps");
-        if (cancelled || !mapRef.current) return;
-        const location = { lat: 52.0247, lng: -0.778 };
-        const map = new Map(mapRef.current, {
-          center: location,
-          zoom: 14,
-          styles: darkMapStyle,
-          disableDefaultUI: false,
-        });
-        const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
-        new AdvancedMarkerElement({ map, position: location, title: "MiHub" });
-      } catch (err) {
-        if (!cancelled) console.error("Google Maps failed to load:", err);
-      }
+
+    // Check if the script is already loaded
+    if (!window.google) {
+      const script = document.createElement("script");
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`;
+      script.async = true;
+      script.defer = true;
+      document.body.appendChild(script);
+
+      script.onload = () => initMap();
+      script.onerror = () => console.error("Google Maps failed to load");
+    } else {
+      initMap(); // script already loaded
     }
-    loadMap();
-    return () => { cancelled = true; };
+
+    function initMap() {
+      const location = { lat: 52.0247, lng: -0.778 };
+      const map = new google.maps.Map(mapRef.current, {
+        center: location,
+        zoom: 14,
+        styles: darkMapStyle,
+      });
+
+      new google.maps.Marker({
+        position: location,
+        map,
+        title: "MiHub",
+      });
+    }
+
+    // Cleanup on unmount
+    return () => {
+      if (mapRef.current) mapRef.current.innerHTML = "";
+    };
   }, [hasMapsKey]);
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-[#05070A] via-[#0A0F18] to-[#05070A] pt-40 pb-24 flex justify-center relative overflow-hidden text-white">
-      {/* Background blobs */}
       <div className="absolute -top-32 -left-32 w-96 h-96 bg-[#2385BE]/20 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 right-0 w-[420px] h-[420px] bg-[#3EBBFF]/20 rounded-full blur-3xl"></div>
 
-      {/* MAIN GRID */}
       <div className="relative z-10 w-full max-w-7xl px-6 grid md:grid-cols-2 gap-16 items-stretch">
-        {/* LEFT SIDE */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
           className="flex flex-col gap-10"
         >
-          {/* CONTACT TEXT */}
           <div className="space-y-8">
-            <h1
-              className="text-4xl md:text-5xl font-extrabold 
-              bg-gradient-to-r from-[#1A8CFF] via-[#38BDF8] to-[#6FD2FF] 
-              bg-clip-text text-transparent 
-              drop-shadow-[0_0_25px_rgba(56,189,248,0.35)]"
-            >
+            <h1 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-[#1A8CFF] via-[#38BDF8] to-[#6FD2FF] bg-clip-text text-transparent drop-shadow-[0_0_25px_rgba(56,189,248,0.35)]">
               Let’s Get In Touch
             </h1>
-
             <p className="text-white/70 text-lg leading-relaxed max-w-md">
               We’re here to answer your questions. Contact us anytime and we’ll
               reply within 24 hours.
             </p>
 
-            {/* EMAIL — displayed as info@mihub.ai; form submissions go to nour.ragab@virtualviewing.com via contact.php */}
             <div className="flex items-center gap-4">
               <Mail size={30} className="text-[#38BDF8]" />
               <div>
@@ -180,7 +164,6 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* ADDRESS */}
             <div className="flex items-center gap-4">
               <MapPin size={30} className="text-[#38BDF8]" />
               <div>
@@ -193,26 +176,18 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* MAP */}
           <div
             ref={mapRef}
-            className="
-              w-full 
-              h-64 
-              rounded-2xl 
-              border border-white/10 
-              shadow-[0_0_25px_rgba(56,189,248,0.15)]
-              overflow-hidden
-              bg-white/5 flex items-center justify-center
-            "
+            className="w-full h-64 rounded-2xl border border-white/10 shadow-[0_0_25px_rgba(56,189,248,0.15)] overflow-hidden bg-white/5 flex items-center justify-center"
           >
             {!hasMapsKey && (
-              <p className="text-white/50 text-sm">Set VITE_GOOGLE_MAPS_API_KEY in .env for map</p>
+              <p className="text-white/50 text-sm">
+                Set VITE_GOOGLE_MAPS_API_KEY in .env for map
+              </p>
             )}
           </div>
         </motion.div>
 
-        {/* RIGHT SIDE (FORM) */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -222,113 +197,101 @@ export default function Contact() {
           <div className="p-[2px] rounded-3xl bg-gradient-to-br from-[#2385BE] to-[#3EBBFF] shadow-xl w-full flex">
             <div className="bg-[#0C1118] rounded-3xl p-10 w-full border border-white/10 backdrop-blur-xl">
               <form onSubmit={handleSubmit} className="space-y-0">
-              {!import.meta.env.VITE_FORMSPREE_CONTACT_ID && (
-                <p className="text-amber-400/90 text-sm mb-4 p-3 rounded-lg bg-amber-500/10 border border-amber-500/30">
-                  To enable the form: create a free form at{" "}
-                  <a href="https://formspree.io" target="_blank" rel="noopener noreferrer" className="underline">formspree.io</a>, then add <code className="bg-white/10 px-1 rounded">VITE_FORMSPREE_CONTACT_ID=your_id</code> to a <code className="bg-white/10 px-1 rounded">.env</code> file in the project root. See CONTACT_SETUP.md.
-                </p>
-              )}
-              {/* FORM */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div>
+                    <label className="font-medium text-sm text-white/80">
+                      First Name
+                    </label>
+                    <input
+                      name="firstName"
+                      value={form.firstName}
+                      onChange={handleChange}
+                      className="mt-1 w-full p-3 bg-[#05070A] text-white border border-white/20 rounded-xl placeholder-white/40 outline-none focus:ring-2 ring-[#38BDF8]"
+                      placeholder="Enter first name"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="font-medium text-sm text-white/80">
+                      Last Name
+                    </label>
+                    <input
+                      name="lastName"
+                      value={form.lastName}
+                      onChange={handleChange}
+                      className="mt-1 w-full p-3 bg-[#05070A] text-white border border-white/20 rounded-xl placeholder-white/40 outline-none focus:ring-2 ring-[#38BDF8]"
+                      placeholder="Enter last name"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-5">
                   <label className="font-medium text-sm text-white/80">
-                    First Name
+                    Subject
                   </label>
                   <input
-                    name="firstName"
-                    value={form.firstName}
+                    type="text"
+                    name="subject"
+                    value={form.subject}
                     onChange={handleChange}
                     className="mt-1 w-full p-3 bg-[#05070A] text-white border border-white/20 rounded-xl placeholder-white/40 outline-none focus:ring-2 ring-[#38BDF8]"
-                    placeholder="Enter first name"
+                    placeholder="Enter your subject"
                     required
                   />
                 </div>
 
-                <div>
+                <div className="mt-5">
                   <label className="font-medium text-sm text-white/80">
-                    Last Name
+                    Email Address
                   </label>
                   <input
-                    name="lastName"
-                    value={form.lastName}
+                    type="email"
+                    name="email"
+                    value={form.email}
                     onChange={handleChange}
                     className="mt-1 w-full p-3 bg-[#05070A] text-white border border-white/20 rounded-xl placeholder-white/40 outline-none focus:ring-2 ring-[#38BDF8]"
-                    placeholder="Enter last name"
+                    placeholder="Enter your email"
                     required
                   />
                 </div>
-              </div>
 
-              {/* SUBJECT */}
-              <div className="mt-5">
-                <label className="font-medium text-sm text-white/80">
-                  Subject
-                </label>
-                <input
-                  type="text"
-                  name="subject"
-                  value={form.subject}
-                  onChange={handleChange}
-                  className="mt-1 w-full p-3 bg-[#05070A] text-white border border-white/20 rounded-xl placeholder-white/40 outline-none focus:ring-2 ring-[#38BDF8]"
-                  placeholder="Enter your subject"
-                  required
-                />
-              </div>
+                <div className="mt-5">
+                  <label className="font-medium text-sm text-white/80">
+                    Message
+                  </label>
+                  <textarea
+                    name="message"
+                    value={form.message}
+                    onChange={handleChange}
+                    rows="4"
+                    className="mt-1 w-full p-3 bg-[#05070A] text-white border border-white/20 rounded-xl placeholder-white/40 outline-none focus:ring-2 ring-[#38BDF8]"
+                    placeholder="Write your message..."
+                    required
+                  />
+                </div>
 
-              {/* EMAIL */}
-              <div className="mt-5">
-                <label className="font-medium text-sm text-white/80">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  className="mt-1 w-full p-3 bg-[#05070A] text-white border border-white/20 rounded-xl placeholder-white/40 outline-none focus:ring-2 ring-[#38BDF8]"
-                  placeholder="Enter your email"
-                  required
-                />
-              </div>
-
-              {/* MESSAGE */}
-              <div className="mt-5">
-                <label className="font-medium text-sm text-white/80">
-                  Message
-                </label>
-                <textarea
-                  name="message"
-                  value={form.message}
-                  onChange={handleChange}
-                  rows="4"
-                  className="mt-1 w-full p-3 bg-[#05070A] text-white border border-white/20 rounded-xl placeholder-white/40 outline-none focus:ring-2 ring-[#38BDF8]"
-                  placeholder="Write your message..."
-                  required
-                />
-              </div>
-
-              {/* SUBMIT */}
-              <div className="mt-8 flex flex-col gap-3">
-                {submitStatus === "success" && (
-                  <p className="text-emerald-400 text-sm">Thanks! Your message was sent.</p>
-                )}
-                {submitStatus === "error" && (
-                  <p className="text-amber-400 text-sm">
-                    {import.meta.env.VITE_FORMSPREE_CONTACT_ID
-                      ? "Could not send. Please try again or email us directly."
-                      : "Contact form not configured. Add VITE_FORMSPREE_CONTACT_ID to .env (see CONTACT_SETUP.md)."}
-                  </p>
-                )}
-                <motion.button
-                  type="submit"
-                  disabled={submitStatus === "sending" || !import.meta.env.VITE_FORMSPREE_CONTACT_ID}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="w-full md:w-auto bg-[#2385BE] text-white px-10 py-3 rounded-full font-semibold shadow-md hover:bg-[#1b6f9f] transition disabled:opacity-70"
-                >
-                  {submitStatus === "sending" ? "Sending…" : "Submit"}
-                </motion.button>
-              </div>
+                <div className="mt-8 flex flex-col gap-3">
+                  {submitStatus === "success" && (
+                    <p className="text-emerald-400 text-sm">
+                      Thanks! Your message was sent.
+                    </p>
+                  )}
+                  {submitStatus === "error" && (
+                    <p className="text-amber-400 text-sm">
+                      Could not send. Please try again or email us directly.
+                    </p>
+                  )}
+                  <motion.button
+                    type="submit"
+                    disabled={submitStatus === "sending"}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="w-full md:w-auto bg-[#2385BE] text-white px-10 py-3 rounded-full font-semibold shadow-md hover:bg-[#1b6f9f] transition disabled:opacity-70"
+                  >
+                    {submitStatus === "sending" ? "Sending…" : "Submit"}
+                  </motion.button>
+                </div>
               </form>
             </div>
           </div>
