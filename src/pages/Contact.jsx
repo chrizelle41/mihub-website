@@ -13,8 +13,56 @@ export default function Contact() {
 
   const mapRef = useRef(null);
 
+  const [submitStatus, setSubmitStatus] = useState(null); // 'sending' | 'success' | 'error'
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitStatus("sending");
+    const formspreeEndpoint = import.meta.env.VITE_FORMSPREE_CONTACT_ID;
+    try {
+      if (formspreeEndpoint) {
+        // Option A: Formspree (works on static hosting – no PHP needed)
+        const res = await fetch(`https://formspree.io/f/${formspreeEndpoint}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            firstName: form.firstName,
+            lastName: form.lastName,
+            email: form.email,
+            subject: form.subject,
+            message: form.message,
+            _replyto: form.email,
+            _subject: form.subject ? `MiHub Contact: ${form.subject}` : "MiHub Contact Form",
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.ok !== false) {
+          setSubmitStatus("success");
+          setForm({ firstName: "", lastName: "", email: "", subject: "", message: "" });
+        } else {
+          setSubmitStatus("error");
+        }
+      } else {
+        // Option B: Your PHP backend (when hosted on a server with PHP)
+        const res = await fetch("/contact.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (data.status === "success") {
+          setSubmitStatus("success");
+          setForm({ firstName: "", lastName: "", email: "", subject: "", message: "" });
+        } else {
+          setSubmitStatus("error");
+        }
+      }
+    } catch {
+      setSubmitStatus("error");
+    }
+  };
 
   /* ----------------------------------------------------------
      DARK MODE MAP STYLE JSON
@@ -65,55 +113,45 @@ export default function Contact() {
     },
   ];
 
+  const hasMapsKey = Boolean(import.meta.env.VITE_GOOGLE_MAPS_API_KEY);
+
   /* ----------------------------------------------------------
-     LOAD GOOGLE MAPS
+     LOAD GOOGLE MAPS (only when API key is set)
   ---------------------------------------------------------- */
   useEffect(() => {
+    if (!hasMapsKey || !mapRef.current) return;
+    let cancelled = false;
     async function loadMap() {
       try {
         const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-
         await new Promise((resolve, reject) => {
           const script = document.createElement("script");
-          script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=maps,marker`;
+          script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=marker&loading=async`;
           script.async = true;
           script.defer = true;
           script.onload = resolve;
           script.onerror = reject;
           document.body.appendChild(script);
         });
-
+        if (cancelled || !mapRef.current) return;
         const { Map } = await google.maps.importLibrary("maps");
-
+        if (cancelled || !mapRef.current) return;
         const location = { lat: 52.0247, lng: -0.778 };
-
         const map = new Map(mapRef.current, {
           center: location,
           zoom: 14,
           styles: darkMapStyle,
           disableDefaultUI: false,
         });
-
-        /* Custom Neon Blue Marker */
-        new google.maps.Marker({
-          map,
-          position: location,
-          icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 10,
-            fillColor: "#38BDF8",
-            fillOpacity: 1,
-            strokeColor: "#60A5FA",
-            strokeWeight: 4,
-          },
-        });
+        const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+        new AdvancedMarkerElement({ map, position: location, title: "MiHub" });
       } catch (err) {
-        console.error("Google Maps failed to load:", err);
+        if (!cancelled) console.error("Google Maps failed to load:", err);
       }
     }
-
     loadMap();
-  }, []);
+    return () => { cancelled = true; };
+  }, [hasMapsKey]);
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-[#05070A] via-[#0A0F18] to-[#05070A] pt-40 pb-24 flex justify-center relative overflow-hidden text-white">
@@ -146,7 +184,7 @@ export default function Contact() {
               reply within 24 hours.
             </p>
 
-            {/* EMAIL */}
+            {/* EMAIL — displayed as info@mihub.ai; form submissions go to nour.ragab@virtualviewing.com via contact.php */}
             <div className="flex items-center gap-4">
               <Mail size={30} className="text-[#38BDF8]" />
               <div>
@@ -178,8 +216,13 @@ export default function Contact() {
               border border-white/10 
               shadow-[0_0_25px_rgba(56,189,248,0.15)]
               overflow-hidden
+              bg-white/5 flex items-center justify-center
             "
-          />
+          >
+            {!hasMapsKey && (
+              <p className="text-white/50 text-sm">Set VITE_GOOGLE_MAPS_API_KEY in .env for map</p>
+            )}
+          </div>
         </motion.div>
 
         {/* RIGHT SIDE (FORM) */}
@@ -191,6 +234,7 @@ export default function Contact() {
         >
           <div className="p-[2px] rounded-3xl bg-gradient-to-br from-[#2385BE] to-[#3EBBFF] shadow-xl w-full flex">
             <div className="bg-[#0C1118] rounded-3xl p-10 w-full border border-white/10 backdrop-blur-xl">
+              <form onSubmit={handleSubmit} className="space-y-0">
               {/* FORM */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
@@ -271,13 +315,24 @@ export default function Contact() {
               </div>
 
               {/* SUBMIT */}
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.97 }}
-                className="mt-8 w-full md:w-auto bg-[#2385BE] text-white px-10 py-3 rounded-full font-semibold shadow-md hover:bg-[#1b6f9f] transition"
-              >
-                Submit
-              </motion.button>
+              <div className="mt-8 flex flex-col gap-3">
+                {submitStatus === "success" && (
+                  <p className="text-emerald-400 text-sm">Thanks! Your message was sent.</p>
+                )}
+                {submitStatus === "error" && (
+                  <p className="text-amber-400 text-sm">Could not send. If this is a static site, the form needs a backend or mailto.</p>
+                )}
+                <motion.button
+                  type="submit"
+                  disabled={submitStatus === "sending"}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="w-full md:w-auto bg-[#2385BE] text-white px-10 py-3 rounded-full font-semibold shadow-md hover:bg-[#1b6f9f] transition disabled:opacity-70"
+                >
+                  {submitStatus === "sending" ? "Sending…" : "Submit"}
+                </motion.button>
+              </div>
+              </form>
             </div>
           </div>
         </motion.div>

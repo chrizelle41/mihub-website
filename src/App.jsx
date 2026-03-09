@@ -21,6 +21,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/Shared/Internal/MiHub" element={<Home />} />
+          <Route path="/Shared/Internal/MiHub/contact" element={<Contact />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/construction" element={<Construction />} />
           <Route path="/residential" element={<Residential />} />

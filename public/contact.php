@@ -15,6 +15,7 @@ $data = json_decode(file_get_contents("php://input"), true);
 $firstName = $data["firstName"] ?? '';
 $lastName  = $data["lastName"] ?? '';
 $email     = $data["email"] ?? '';
+$subject   = $data["subject"] ?? '';
 $message   = $data["message"] ?? '';
 
 $mail = new PHPMailer(true);
@@ -28,13 +29,14 @@ try {
     $mail->SMTPSecure = 'tls';
     $mail->Port = 587;
 
-    $mail->setFrom('chrizelle.feliciano@virtualviewing.com, 'MiHub Contact Form');
-    $mail->addAddress('info@mihub.ai');
+    $mail->setFrom('chrizelle.feliciano@virtualviewing.com', 'MiHub Contact Form');
+    $mail->addAddress('nour.ragab@virtualviewing.com'); // Form submissions go here
 
-    $mail->Subject = "New Contact Form Message";
+    $mail->Subject = $subject ? "MiHub Contact: $subject" : "New Contact Form Message";
     $mail->Body = "
 Name: $firstName $lastName
 Email: $email
+Subject: $subject
 
 Message:
 $message
