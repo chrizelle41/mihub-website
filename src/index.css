@@ -23,9 +23,31 @@
   line-height: 1.5;
 }
 
-/* Full-width sections: prevent horizontal scroll from 100vw */
+/* Full-width sections: no body margin, prevent horizontal scroll */
 html, body {
+  margin: 0;
+  padding: 0;
   overflow-x: hidden;
+  width: 100%;
+}
+/* Always show vertical scrollbar so layout width is consistent from first paint
+   (no gap on right when starting from top after refresh) */
+html {
+  overflow-y: scroll;
+}
+/* Match section backgrounds so any sliver next to scrollbar isn’t visible */
+body {
+  background: #0a0a0f;
+}
+#root {
+  width: 100%;
+  min-width: 0;
+}
+/* Extend section background into scrollbar area so no cyan gap on the right */
+.section-bleed-right {
+  padding-right: 24px;
+  margin-right: -24px;
+  box-sizing: content-box;
 }
 
 /* Apple-style smooth scroll + account for fixed nav */

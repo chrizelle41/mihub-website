@@ -1,3 +1,4 @@
-Place bldg.mp4 here.
-The video is used on the Home page (Digital Twin section).
-File name must be: bldg.mp4
+Place video files here.
+
+- bldg.mp4 — used on the Home page (Digital Twin section).
+- bgvid.mp4 — hero background on the Home page (first section). Loops, then fades as you scroll into the core.
