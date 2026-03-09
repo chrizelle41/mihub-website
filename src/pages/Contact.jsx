@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Mail, MapPin } from "lucide-react";
-import emailjs from "emailjs-com";
+import emailjs from "@emailjs/browser";
 
 export default function Contact() {
   const [form, setForm] = useState({
