@@ -169,6 +169,8 @@ export default function Home() {
     typeof window !== "undefined" ? window.innerHeight : 800,
   );
   const heroVideoRef = useRef(null);
+  const whyMihubRef = useRef(null);
+  const whyMihubInView = useInView(whyMihubRef, { once: true });
 
   useEffect(() => {
     const update = () => {
@@ -661,7 +663,6 @@ export default function Home() {
         </AnimatedSection>
 
         <SectionDivider />
-
         {/* The Digital Twin — black section: full width, title with glow, text left, video right */}
         <AnimatedSection className="section-bleed-right min-h-screen flex flex-col justify-center px-6 md:px-20 py-20 relative bg-black w-full">
           <div
@@ -673,16 +674,19 @@ export default function Home() {
             }}
             aria-hidden
           />
+
           <div
             className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent opacity-60"
             aria-hidden
           />
+
           <motion.span
             className="relative z-10 text-cyan-300/80 text-xs font-medium uppercase tracking-[0.25em] mb-4 text-center block"
             {...smoothReveal}
           >
             Digital twin
           </motion.span>
+
           <motion.h2
             className="font-story-title font-bold mb-6 md:mb-8 text-center w-full text-white relative z-10"
             style={{
@@ -693,7 +697,9 @@ export default function Home() {
           >
             The Digital Twin
           </motion.h2>
+
           <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-center">
+            {/* TEXT */}
             <motion.div
               className="flex flex-col justify-center order-2 lg:order-1"
               {...smoothReveal}
@@ -703,31 +709,26 @@ export default function Home() {
                 your starting point for creating your building's digital twin.
               </p>
             </motion.div>
+
+            {/* VIDEO — container removed */}
             <motion.div
-              className="relative w-full h-[320px] sm:h-[380px] md:h-[440px] lg:h-[420px] xl:h-[480px] order-1 lg:order-2 overflow-hidden flex-shrink-0 rounded-2xl border border-white/10 p-1"
+              className="relative w-full h-[320px] sm:h-[380px] md:h-[440px] lg:h-[420px] xl:h-[480px] order-1 lg:order-2 flex items-center justify-center"
               {...smoothReveal}
-              style={{
-                boxShadow:
-                  "0 0 0 1px rgba(34,211,238,0.15), 0 0 60px rgba(34,211,238,0.08)",
-              }}
             >
-              <div className="absolute inset-0 rounded-xl overflow-hidden">
-                <video
-                  src={bldgVideo}
-                  className="absolute inset-0 w-full h-full object-contain"
-                  playsInline
-                  muted
-                  loop
-                  autoPlay
-                  aria-label="Building digital twin"
-                />
-              </div>
+              <video
+                src={bldgVideo}
+                className="w-full h-full object-contain"
+                playsInline
+                muted
+                loop
+                autoPlay
+                aria-label="Building digital twin"
+              />
             </motion.div>
           </div>
         </AnimatedSection>
 
         <SectionDivider />
-
         {/* Why is this important? — cyan section only, larger */}
         <AnimatedSection className="section-bleed-right min-h-screen flex flex-col justify-center items-center px-6 md:px-20 py-24 md:py-32 relative bg-gradient-to-br from-cyan-900/95 via-[#0c8db6] to-cyan-800/95 w-full overflow-hidden">
           <div
