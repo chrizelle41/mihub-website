@@ -1,5 +1,41 @@
 /* Tailwind base + utilities */
 @import "tailwindcss";
 
-/* Font import */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+/* Font import – storytelling, editorial scale */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+/* Storytelling typography scale – applied via Tailwind */
+.font-story-headline {
+  font-size: clamp(2.5rem, 6vw + 1.5rem, 4.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.font-story-title {
+  font-size: clamp(1.75rem, 3.5vw + 0.5rem, 3rem);
+  line-height: 1.2;
+}
+.font-story-body {
+  font-size: clamp(1.125rem, 1.5vw + 0.5rem, 1.5rem);
+  line-height: 1.6;
+}
+.font-story-lead {
+  font-size: clamp(1.25rem, 2vw + 0.25rem, 1.75rem);
+  line-height: 1.5;
+}
+
+/* Apple-style smooth scroll + account for fixed nav */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Softer scroll momentum feel (supported in modern browsers) */
+@supports (scroll-timeline: scroll()) {
+  /* Future: scroll-driven animations can hook here */
+}
