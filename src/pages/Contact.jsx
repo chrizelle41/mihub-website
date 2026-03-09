@@ -19,45 +19,32 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formspreeId = import.meta.env.VITE_FORMSPREE_CONTACT_ID;
+    if (!formspreeId) {
+      setSubmitStatus("error");
+      return;
+    }
     setSubmitStatus("sending");
-    const formspreeEndpoint = import.meta.env.VITE_FORMSPREE_CONTACT_ID;
     try {
-      if (formspreeEndpoint) {
-        // Option A: Formspree (works on static hosting – no PHP needed)
-        const res = await fetch(`https://formspree.io/f/${formspreeEndpoint}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            firstName: form.firstName,
-            lastName: form.lastName,
-            email: form.email,
-            subject: form.subject,
-            message: form.message,
-            _replyto: form.email,
-            _subject: form.subject ? `MiHub Contact: ${form.subject}` : "MiHub Contact Form",
-          }),
-        });
-        const data = await res.json().catch(() => ({}));
-        if (res.ok && data.ok !== false) {
-          setSubmitStatus("success");
-          setForm({ firstName: "", lastName: "", email: "", subject: "", message: "" });
-        } else {
-          setSubmitStatus("error");
-        }
+      const res = await fetch(`https://formspree.io/f/${formspreeId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: form.firstName,
+          lastName: form.lastName,
+          email: form.email,
+          subject: form.subject,
+          message: form.message,
+          _replyto: form.email,
+          _subject: form.subject ? `MiHub Contact: ${form.subject}` : "MiHub Contact Form",
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok !== false) {
+        setSubmitStatus("success");
+        setForm({ firstName: "", lastName: "", email: "", subject: "", message: "" });
       } else {
-        // Option B: Your PHP backend (when hosted on a server with PHP)
-        const res = await fetch("/contact.php", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
-        });
-        const data = await res.json().catch(() => ({}));
-        if (data.status === "success") {
-          setSubmitStatus("success");
-          setForm({ firstName: "", lastName: "", email: "", subject: "", message: "" });
-        } else {
-          setSubmitStatus("error");
-        }
+        setSubmitStatus("error");
       }
     } catch {
       setSubmitStatus("error");
@@ -235,6 +222,12 @@ export default function Contact() {
           <div className="p-[2px] rounded-3xl bg-gradient-to-br from-[#2385BE] to-[#3EBBFF] shadow-xl w-full flex">
             <div className="bg-[#0C1118] rounded-3xl p-10 w-full border border-white/10 backdrop-blur-xl">
               <form onSubmit={handleSubmit} className="space-y-0">
+              {!import.meta.env.VITE_FORMSPREE_CONTACT_ID && (
+                <p className="text-amber-400/90 text-sm mb-4 p-3 rounded-lg bg-amber-500/10 border border-amber-500/30">
+                  To enable the form: create a free form at{" "}
+                  <a href="https://formspree.io" target="_blank" rel="noopener noreferrer" className="underline">formspree.io</a>, then add <code className="bg-white/10 px-1 rounded">VITE_FORMSPREE_CONTACT_ID=your_id</code> to a <code className="bg-white/10 px-1 rounded">.env</code> file in the project root. See CONTACT_SETUP.md.
+                </p>
+              )}
               {/* FORM */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
@@ -320,11 +313,15 @@ export default function Contact() {
                   <p className="text-emerald-400 text-sm">Thanks! Your message was sent.</p>
                 )}
                 {submitStatus === "error" && (
-                  <p className="text-amber-400 text-sm">Could not send. If this is a static site, the form needs a backend or mailto.</p>
+                  <p className="text-amber-400 text-sm">
+                    {import.meta.env.VITE_FORMSPREE_CONTACT_ID
+                      ? "Could not send. Please try again or email us directly."
+                      : "Contact form not configured. Add VITE_FORMSPREE_CONTACT_ID to .env (see CONTACT_SETUP.md)."}
+                  </p>
                 )}
                 <motion.button
                   type="submit"
-                  disabled={submitStatus === "sending"}
+                  disabled={submitStatus === "sending" || !import.meta.env.VITE_FORMSPREE_CONTACT_ID}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.97 }}
                   className="w-full md:w-auto bg-[#2385BE] text-white px-10 py-3 rounded-full font-semibold shadow-md hover:bg-[#1b6f9f] transition disabled:opacity-70"
