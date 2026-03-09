@@ -9,16 +9,21 @@ import hays from "../assets/hays.png";
 
 const SECTION_INNER = "w-full max-w-6xl mx-auto px-8";
 
-// Full-viewport section with scroll-based opacity/scale (like Home)
+// Full-viewport section with smooth scroll-based fade in/out
 function ScrollSection({ children, className = "", bgClass, id }) {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.25], [0.96, 1]);
-  const y = useTransform(scrollYProgress, [0, 0.2], [24, 0]);
+  // Smooth fade in as section enters, full opacity in centre, smooth fade out as it leaves
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.38, 0.62, 0.8, 1],
+    [0, 0.85, 1, 1, 0.85, 0]
+  );
+  const scale = useTransform(scrollYProgress, [0, 0.2, 0.5, 0.8, 1], [0.97, 0.99, 1, 0.99, 0.97]);
+  const y = useTransform(scrollYProgress, [0, 0.25, 0.5, 0.75, 1], [20, 8, 0, -8, -20]);
 
   return (
     <motion.section
@@ -39,13 +44,13 @@ function ScrollSection({ children, className = "", bgClass, id }) {
 
 function FadeUp({ children, className = "" }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.12 });
+  const isInView = useInView(ref, { once: true, amount: 0.08 });
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 36 }}
+      initial={{ opacity: 0, y: 24 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.65, ease: [0.25, 0.1, 0.25, 1] }}
+      transition={{ duration: 0.9, ease: [0.22, 0.61, 0.36, 1] }}
       className={className}
     >
       {children}
