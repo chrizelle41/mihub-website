@@ -10,7 +10,7 @@ import Construction from "./pages/Construction";
 import Residential from "./pages/Residential";
 import PropertyManagement from "./pages/PropertyManagement";
 import DataRoom from "./pages/DataRoom";
-import WhyMihub from "./pages/WhyMihub";
+import WhyMihub from "./pages/WhyMiHub";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 

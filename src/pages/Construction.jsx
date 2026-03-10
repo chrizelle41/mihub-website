@@ -5,9 +5,9 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import heroVideo from "../assets/construction-video.mp4";
 
 // Images
-import iBID from "../assets/iBID.png";
+import iBID from "../assets/ibid.png";
 import ReportIt from "../assets/report.png";
-import In1Place from "../assets/in1place.png";
+import In1Place from "../assets/in1Place.png";
 import SlimBIM from "../assets/slimbim.png";
 import Placeholder from "../assets/17.png"; // Digital Twin, Digital O&Ms, Digital Training Guides placeholder
 

@@ -10,11 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@googlemaps/js-api-loader": "^2.0.2",
     "@gsap/react": "^2.1.2",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
-    "emailjs-com": "^3.2.0",
     "framer-motion": "^12.34.3",
     "gsap": "^3.13.0",
     "lucide-react": "^0.554.0",
