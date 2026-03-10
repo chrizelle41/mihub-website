@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import { Zap, Target, Layers, Handshake, ChevronRight } from "lucide-react";
 
 import vv from "../assets/vv.png";
 import dome from "../assets/dome.png";
@@ -9,14 +10,13 @@ import hays from "../assets/hays.png";
 
 const SECTION_INNER = "w-full max-w-6xl mx-auto px-8";
 
-// Full-viewport section with smooth scroll-based fade in/out
+// Content-height section with smooth scroll-based fade in/out (no full viewport)
 function ScrollSection({ children, className = "", bgClass, id }) {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
-  // Smooth fade in as section enters, full opacity in centre, smooth fade out as it leaves
   const opacity = useTransform(
     scrollYProgress,
     [0, 0.2, 0.38, 0.62, 0.8, 1],
@@ -30,11 +30,11 @@ function ScrollSection({ children, className = "", bgClass, id }) {
       id={id}
       ref={ref}
       style={{ opacity }}
-      className={`min-h-screen w-full flex flex-col items-center justify-center relative overflow-hidden ${bgClass} ${className}`}
+      className={`w-full flex flex-col items-center relative overflow-hidden py-20 md:py-28 lg:py-32 ${bgClass} ${className}`}
     >
       <motion.div
         style={{ scale, y }}
-        className={`${SECTION_INNER} py-16 relative z-10`}
+        className={`${SECTION_INNER} relative z-10`}
       >
         {children}
       </motion.div>
@@ -131,32 +131,67 @@ export default function WhyMiHub() {
         </div>
       </ScrollSection>
 
-      {/* ========== WHAT MAKES MIHUB DIFFERENT ========== */}
+      {/* ========== WHAT MAKES MIHUB DIFFERENT (icons + arrows, like All your building data) ========== */}
       <ScrollSection bgClass={getSectionBg(1)} id="what-makes-different">
         <div className="relative text-center">
           <Orb className="-bottom-32 right-0" />
           <FadeUp>
             <h2
-              className="text-4xl md:text-6xl font-extrabold
-                bg-gradient-to-r from-[#1A8CFF] via-[#38BDF8] to-[#6FD2FF]
-                bg-clip-text text-transparent mb-16"
+              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white"
             >
               What Makes MiHub Different
             </h2>
           </FadeUp>
-          <div className="space-y-16 max-w-5xl mx-auto">
-            {[
-              "MiHub makes things cheaper, quicker and more efficient, we are focussing on bringing real, measurable benefit rather than adding yet another layer of process to an already taxed industry.",
-              "MiHub has developed a unique platform that features a range of applications intertwined in to a suite of apps, that run right across the entire construction and operations phases of a building, a cradle to completion service that you can't find anywhere else.",
-              "MiHub is the partner of choice as it is the only platform where you can get a complete solution. MiHub works with legacy suppliers along the way to ensure continuity and a seamless adoption of the MiHub platform.",
-            ].map((text, i) => (
-              <FadeUp key={i}>
-                <p className="text-xl md:text-2xl text-white/70 leading-relaxed">
-                  {text}
-                </p>
-              </FadeUp>
-            ))}
-          </div>
+          <FadeUp>
+            <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-2 xl:gap-4 mt-16 md:mt-20 lg:flex-nowrap">
+              {[
+                {
+                  icon: Zap,
+                  title: "Cheaper, quicker, more efficient",
+                  description: "Real, measurable benefit—not another layer of process.",
+                },
+                {
+                  icon: Target,
+                  title: "Real measurable benefit",
+                  description: "Value that counts for an already taxed industry.",
+                },
+                {
+                  icon: Layers,
+                  title: "Cradle to completion",
+                  description: "One platform across construction and operations—you can't find it elsewhere.",
+                },
+                {
+                  icon: Handshake,
+                  title: "Partner of choice",
+                  description: "Complete solution with legacy suppliers; seamless adoption.",
+                },
+              ].map((item, i) => {
+                const Icon = item.icon;
+                return (
+                <span key={i} className="contents">
+                  <div className="flex flex-col items-center text-center w-full lg:min-w-0 lg:max-w-[220px] xl:max-w-[260px]">
+                    <div className="w-14 h-14 lg:w-12 lg:h-12 xl:w-14 xl:h-14 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-white shadow-[0_0_24px_rgba(34,211,238,0.3)] mb-3">
+                      <Icon size={24} strokeWidth={1.5} />
+                    </div>
+                    <h4 className="text-base lg:text-sm xl:text-lg font-bold text-white mb-1">
+                      {item.title}
+                    </h4>
+                    <p className="text-sm text-white/75 leading-snug">
+                      {item.description}
+                    </p>
+                  </div>
+                  {i < 4 - 1 && (
+                    <ChevronRight
+                      size={24}
+                      className="text-cyan-400/70 shrink-0 hidden lg:block self-center flex-shrink-0"
+                      aria-hidden
+                    />
+                  )}
+                </span>
+              );
+              })}
+            </div>
+          </FadeUp>
         </div>
       </ScrollSection>
 

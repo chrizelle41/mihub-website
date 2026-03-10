@@ -1,4 +1,5 @@
-import { Routes, Route } from "react-router-dom";
+import { useLayoutEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -14,6 +15,12 @@ import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 
 function App() {
+  const location = useLocation();
+
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [location.pathname]);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />

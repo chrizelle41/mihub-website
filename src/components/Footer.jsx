@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { ScrollToTopLink } from "./ScrollToTopLink";
 import { motion } from "framer-motion";
 import { Mail, Linkedin } from "lucide-react";
 
@@ -12,9 +12,9 @@ export default function Footer() {
         <div>
           <h3 className="text-xl font-bold mb-4">Quick Links</h3>
           <ul className="space-y-2">
-            <li><Link to="/terms" className="hover:underline">Terms & Conditions</Link></li>
-            <li><Link to="/privacy" className="hover:underline">Privacy Policy</Link></li>
-            <li><Link to="/contact" className="hover:underline">Contact</Link></li>
+            <li><ScrollToTopLink to="/terms" className="hover:underline">Terms & Conditions</ScrollToTopLink></li>
+            <li><ScrollToTopLink to="/privacy" className="hover:underline">Privacy Policy</ScrollToTopLink></li>
+            <li><ScrollToTopLink to="/contact" className="hover:underline">Contact</ScrollToTopLink></li>
           </ul>
         </div>
 

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { ScrollToTopLink } from "../components/ScrollToTopLink";
 import { motion } from "framer-motion";
 
 export default function DataRoom() {
@@ -46,12 +46,12 @@ export default function DataRoom() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.45 }}
         >
-          <Link
+          <ScrollToTopLink
             to="/contact"
             className="inline-block px-8 py-4 rounded-full font-semibold text-white bg-gradient-to-r from-[#1A8CFF] to-[#38BDF8] hover:from-[#38BDF8] hover:to-[#6FD2FF] transition-all shadow-[0_0_25px_rgba(56,189,248,0.25)]"
           >
             Get in touch
-          </Link>
+          </ScrollToTopLink>
         </motion.div>
       </div>
     </div>

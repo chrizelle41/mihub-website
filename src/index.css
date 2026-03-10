@@ -62,6 +62,13 @@ html {
   }
 }
 
+/* Hero: disable moving stars/streaks when user prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-star-drift,
+  .animate-star-drift-slow,
+  .animate-streak-flow { animation: none; }
+}
+
 /* Softer scroll momentum feel (supported in modern browsers) */
 @supports (scroll-timeline: scroll()) {
   /* Future: scroll-driven animations can hook here */

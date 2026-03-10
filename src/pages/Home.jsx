@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useRef } from "react";
+import { ScrollToTopLink } from "../components/ScrollToTopLink";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import AIBrain from "../components/AIBrain";
 import CircuitLines from "../components/CircuitLines";
@@ -27,12 +27,11 @@ import {
 } from "lucide-react";
 import ScrollBackground from "../components/ScrollBackground";
 import bldgVideo from "../assets/bldg.mp4";
-import heroVideo from "../assets/bgvid.mp4";
 import dataRoomImage from "../assets/dataRoom.png";
 
-const SECTION_INNER = "w-full max-w-5xl mx-auto px-6";
+const SECTION_INNER = "w-full max-w-6xl mx-auto px-4 sm:px-5 md:px-6";
 
-// Full-viewport section with scroll-based opacity/scale
+// Content-height section with scroll-based opacity/scale (no full viewport)
 function ScrollSection({ children, className = "", bgClass, id }) {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -48,11 +47,11 @@ function ScrollSection({ children, className = "", bgClass, id }) {
       id={id}
       ref={ref}
       style={{ opacity }}
-      className={`min-h-screen w-full flex flex-col items-center justify-center relative ${bgClass} ${className}`}
+      className={`w-full flex flex-col items-center relative py-20 md:py-28 lg:py-32 ${bgClass} ${className}`}
     >
       <motion.div
         style={{ scale, y }}
-        className={`${SECTION_INNER} py-12 relative`}
+        className={`${SECTION_INNER} relative`}
       >
         {children}
       </motion.div>
@@ -108,6 +107,76 @@ function GridOverlay() {
   );
 }
 
+// Hero: deep blue/black, countless faint stars, subtle blue-to-cyan streaks only
+function HeroStarsBackground() {
+  const starPositions = React.useMemo(() => {
+    const positions = [];
+    for (let i = 0; i < 280; i++) {
+      positions.push({
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        r: 0.25 + Math.random() * 0.5,
+        o: 0.15 + Math.random() * 0.5,
+        slow: i % 3 === 0,
+      });
+    }
+    return positions;
+  }, []);
+  return (
+    <div className="absolute inset-0 overflow-hidden">
+      {/* Deep blue to black gradient base */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(15,23,42,0.5) 0%, transparent 50%), radial-gradient(ellipse 100% 100% at 50% 100%, #050508 0%, #071318 40%, #080c12 100%)",
+        }}
+      />
+      {/* Moving stars — two layers for parallax feel */}
+      <svg
+        className="absolute inset-0 w-full h-full animate-star-drift"
+        style={{ willChange: "transform" }}
+        aria-hidden
+      >
+        {starPositions.filter((s) => !s.slow).map((s, i) => (
+          <circle
+            key={i}
+            cx={`${s.x}%`}
+            cy={`${s.y}%`}
+            r={s.r}
+            fill="white"
+            opacity={s.o}
+          />
+        ))}
+      </svg>
+      <svg
+        className="absolute inset-0 w-full h-full animate-star-drift-slow"
+        style={{ willChange: "transform" }}
+        aria-hidden
+      >
+        {starPositions.filter((s) => s.slow).map((s, i) => (
+          <circle
+            key={i}
+            cx={`${s.x}%`}
+            cy={`${s.y}%`}
+            r={s.r}
+            fill="white"
+            opacity={s.o}
+          />
+        ))}
+      </svg>
+      {/* Subtle blue-to-cyan light streaks only */}
+      <div
+        className="absolute inset-0 animate-streak-flow"
+        style={{
+          background:
+            "linear-gradient(120deg, transparent 0%, rgba(59,130,246,0.08) 30%, transparent 60%), linear-gradient(240deg, transparent 10%, rgba(34,211,238,0.06) 40%, transparent 70%), linear-gradient(300deg, transparent 20%, rgba(56,189,248,0.07) 50%, transparent 80%)",
+        }}
+      />
+    </div>
+  );
+}
+
 // Alternating section backgrounds: dark vs cyan-tinted for contrast
 const SECTION_BGS = [
   "bg-[#071318]", // dark (Why MiHub)
@@ -144,129 +213,146 @@ const apiFeatures = [
   { label: "Tenants' specific dashboards", icon: LayoutDashboard },
 ];
 
-const digitalTwinItems = [
-  "Risks across the whole building",
-  "Compliance issues",
-  "Damp & Mould (Awaab's Law)",
-  "Fire risks",
-  "Building Safety Act compliance",
-  "Evacuation compliance (Martyn's Law)",
-  "Remediation costs",
-  "Disposal costs",
+const whyImportantCards = [
+  {
+    title: "Risks across the whole building",
+    description: "Identify and track risks across the entire building lifecycle in one place.",
+    icon: AlertTriangle,
+  },
+  {
+    title: "Compliance issues",
+    description: "Stay on top of regulatory and compliance requirements with clear visibility.",
+    icon: Shield,
+  },
+  {
+    title: "Damp & Mould (Awaab's Law)",
+    description: "Monitor conditions and meet Awaab's Law obligations with proactive insights.",
+    icon: AlertTriangle,
+  },
+  {
+    title: "Fire risks",
+    description: "Understand and mitigate fire safety risks with integrated data and reporting.",
+    icon: Flame,
+  },
+  {
+    title: "Building Safety Act compliance",
+    description: "Navigate Building Safety Act requirements with structured, auditable data.",
+    icon: Scale,
+  },
+  {
+    title: "Evacuation compliance (Martyn's Law)",
+    description: "Plan and demonstrate evacuation and Martyn's Law compliance effectively.",
+    icon: Users,
+  },
+  {
+    title: "Remediation costs",
+    description: "Model and track remediation costs with clearer forecasting and visibility.",
+    icon: FileStack,
+  },
+  {
+    title: "Disposal costs",
+    description: "Understand end-of-life and disposal costs as part of the full picture.",
+    icon: FileStack,
+  },
 ];
 
-const digitalTwinIcons = [
-  AlertTriangle,
-  Shield,
-  AlertTriangle,
-  Flame,
-  Scale,
-  Users,
-  FileStack,
-  FileStack,
+const industryFirstsTimeline = [
+  {
+    title: "Industry-first AI",
+    description:
+      "MiHub quietly powers a series of industry-first AI capabilities. We don't reveal everything we do. We don't like to say too much. But once you've seen MiHub in action, you'll understand why.",
+  },
+  {
+    title: "From £15,000",
+    description:
+      "With projects starting from £15,000, cost is no longer a barrier. How do we do this? That's a closely guarded secret, the fruits of years of hard-work, blood, sweat and tears and £millions in R&D.",
+  },
+  {
+    title: "We are unique",
+    description: 'But we can say: "We are unique."',
+  },
+  {
+    title: "1+1 = 3",
+    description:
+      "We are the only platform that addresses the whole as a series of individual challenges, adding value at each and every step making sure that in the end 1+1 = 3 and often, much, much more.",
+  },
 ];
 
 export default function Home() {
-  const heroRef = useRef(null);
-  const videoRef = useRef(null);
   const nextSectionRef = useRef(null);
-  const [hasPlayed, setHasPlayed] = useState(false);
-  const [digitalTwinIndex, setDigitalTwinIndex] = useState(0);
 
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-  const heroTextOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
-
-  // Video plays when user scrolls; pause/reset when back at top
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!videoRef.current) return;
-      const y = window.scrollY;
-      if (y > 10 && !hasPlayed) {
-        videoRef.current.play();
-        setHasPlayed(true);
-      }
-      if (y <= 10 && hasPlayed) {
-        videoRef.current.pause();
-        videoRef.current.currentTime = 0;
-        setHasPlayed(false);
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [hasPlayed]);
-
-  // When video ends, smooth scroll to next section
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    const onEnded = () => {
-      nextSectionRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    };
-    video.addEventListener("ended", onEnded);
-    return () => video.removeEventListener("ended", onEnded);
-  }, []);
-
-  // Rotating "Why is this important?" items
-  useEffect(() => {
-    const t = setInterval(
-      () => setDigitalTwinIndex((i) => (i + 1) % digitalTwinItems.length),
-      3200,
-    );
-    return () => clearInterval(t);
-  }, []);
+  const scrollToNext = () => {
+    nextSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <div className="relative text-white overflow-x-hidden flex flex-col items-center">
       <ScrollBackground />
       <div className="relative z-10 w-full flex flex-col items-center">
-        {/* ========== HERO: scroll-controlled video, auto-advance when done ========== */}
-        <section
-          ref={heroRef}
-          className="relative w-full min-h-screen flex flex-col items-center justify-start overflow-hidden bg-black pt-[20vh] sm:pt-[24vh]"
-        >
-          <video
-            ref={videoRef}
-            src={heroVideo}
-            muted
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover opacity-90"
-          />
-          <div className="absolute inset-0 bg-[#0c8db6]/20" />
-          <motion.div
-            style={{ opacity: heroTextOpacity }}
-            className="relative z-10 text-center px-6 max-w-4xl mx-auto"
-          >
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white drop-shadow-[0_0_40px_rgba(34,211,238,0.2)]">
-              MiHub – the world's most advanced real estate AI platform
+        {/* ========== HERO: stars + subtle blue streaks, normal scroll ========== */}
+        <section className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden pt-20">
+          <HeroStarsBackground />
+          <FadeUp className="relative z-10 text-center px-4 sm:px-5 md:px-6 max-w-6xl mx-auto">
+            {/* Small pill badge — blue/cyan glow */}
+            <div className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-1.5 mb-6 sm:mb-8 shadow-[0_0_20px_rgba(34,211,238,0.15)]">
+              <span className="text-sm sm:text-base text-white/80 font-medium">
+                AI-Powered Building Intelligence
+              </span>
+            </div>
+            {/* Main headline: blue-to-cyan gradient with subtle glow */}
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold tracking-tight leading-[1.05]">
+              <span
+                className="bg-gradient-to-r from-blue-400 via-cyan-400 to-cyan-300 bg-clip-text text-transparent"
+                style={{
+                  filter:
+                    "drop-shadow(0 0 24px rgba(34,211,238,0.4)) drop-shadow(0 0 48px rgba(56,189,248,0.25))",
+                }}
+              >
+                MiHub
+              </span>
             </h1>
-          </motion.div>
+            {/* Subheading in lighter gray */}
+            <p className="mt-5 sm:mt-6 text-xl sm:text-2xl md:text-3xl lg:text-4xl text-gray-400 font-normal tracking-tight max-w-2xl mx-auto leading-snug">
+              the world's most advanced ai platform
+            </p>
+            {/* Get Started — scrolls to next section */}
+            <div className="mt-8 sm:mt-10">
+              <motion.button
+                type="button"
+                onClick={scrollToNext}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="inline-flex items-center gap-2 rounded-full border-2 border-white/90 bg-white/5 px-8 py-4 text-lg font-semibold text-white transition-all hover:bg-white/10 hover:border-white"
+              >
+                <ChevronRight size={22} strokeWidth={2.5} />
+                Get Started
+              </motion.button>
+            </div>
+          </FadeUp>
         </section>
 
         <div ref={nextSectionRef} className="w-full flex flex-col">
-          {/* ========== WHY MIHUB ========== */}
+          {/* ========== Why MiHub ========== */}
           <ScrollSection bgClass={getSectionBg(0)}>
             <div className="relative text-center">
               <Orb className="-top-40 -left-40" />
               <GridOverlay />
               <FadeUp>
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-cyan-400 via-cyan-300 to-cyan-400 text-transparent bg-clip-text">
-                  Why MiHub
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold">
+                  Why{" "}
+                  <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                    MiHub
+                  </span>
                 </h2>
               </FadeUp>
               <FadeUp>
-                <p className="mt-8 text-2xl md:text-3xl lg:text-4xl text-white/90 max-w-4xl mx-auto leading-relaxed">
+                <p className="mt-8 text-xl md:text-2xl lg:text-3xl text-white/90 max-w-4xl mx-auto leading-relaxed">
                   MiHub lets you see all you need to know about your building,
                   yesterday, today and for tomorrow.
                 </p>
               </FadeUp>
               <FadeUp>
-                <p className="mt-6 text-xl md:text-2xl lg:text-3xl text-white/80 max-w-3xl mx-auto">
+                <p className="mt-6 text-lg md:text-xl lg:text-2xl text-white/80 max-w-3xl mx-auto">
                   It doesn't just help you see what's happening now, it helps
                   you understand what's about to happen next.
                 </p>
@@ -283,14 +369,45 @@ export default function Home() {
                   All your building data in one place
                 </h2>
               </FadeUp>
+              {/* Icons with arrows between them + title + definition each */}
               <FadeUp>
-                <p className="mt-8 text-xl md:text-2xl lg:text-3xl text-white/85 max-w-4xl mx-auto leading-relaxed">
-                  Buildings are complex. They produce a lot of data. All too
-                  often that data is inaccessible, or there is simply so much
-                  information that it becomes overwhelming. MiHub lets you cut
-                  through the noise to see and understand the data that you need
-                  to know.
-                </p>
+                <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-4 mt-16 md:mt-20">
+                  <div className="flex flex-col items-center text-center max-w-xs">
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-white shadow-[0_0_24px_rgba(34,211,238,0.3)] mb-4">
+                      <Layers size={28} strokeWidth={1.5} />
+                    </div>
+                    <h4 className="text-lg md:text-xl font-bold text-white mb-2">
+                      Buildings are complex
+                    </h4>
+                    <p className="text-sm md:text-base text-white/75 leading-relaxed">
+                      They produce a lot of data. MiHub brings it together in one place.
+                    </p>
+                  </div>
+                  <ChevronRight size={28} className="text-cyan-400/70 shrink-0 hidden md:block" aria-hidden />
+                  <div className="flex flex-col items-center text-center max-w-xs">
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-white shadow-[0_0_24px_rgba(34,211,238,0.3)] mb-4">
+                      <Database size={28} strokeWidth={1.5} />
+                    </div>
+                    <h4 className="text-lg md:text-xl font-bold text-white mb-2">
+                      Cut through the noise
+                    </h4>
+                    <p className="text-sm md:text-base text-white/75 leading-relaxed">
+                      All too often that data is inaccessible, or there is simply so much information that it becomes overwhelming.
+                    </p>
+                  </div>
+                  <ChevronRight size={28} className="text-cyan-400/70 shrink-0 hidden md:block" aria-hidden />
+                  <div className="flex flex-col items-center text-center max-w-xs">
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-white shadow-[0_0_24px_rgba(34,211,238,0.3)] mb-4">
+                      <LayoutGrid size={28} strokeWidth={1.5} />
+                    </div>
+                    <h4 className="text-lg md:text-xl font-bold text-white mb-2">
+                      See what you need
+                    </h4>
+                    <p className="text-sm md:text-base text-white/75 leading-relaxed">
+                      MiHub lets you cut through the noise to see and understand the data that you need to know.
+                    </p>
+                  </div>
+                </div>
               </FadeUp>
             </div>
           </ScrollSection>
@@ -373,18 +490,18 @@ export default function Home() {
                   loop
                   playsInline
                   autoPlay
-                  className="w-full min-h-[60vh] h-auto object-contain"
+                  className="w-full h-auto max-h-[70vh] object-contain"
                 />
               </FadeUp>
             </div>
           </ScrollSection>
 
-          {/* ========== Why is this important? – rotating visual ========== */}
+          {/* ========== Why is this important? – list in glassmorphism containers ========== */}
           <ScrollSection bgClass={getSectionBg(5)}>
-            <div className="relative text-center">
+            <div className="relative w-full text-center">
               <GridOverlay />
               <FadeUp>
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8">
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
                   Why is this important?
                 </h2>
               </FadeUp>
@@ -395,23 +512,26 @@ export default function Home() {
                 </p>
               </FadeUp>
               <FadeUp>
-                <div className="inline-flex flex-col items-center justify-center gap-4 p-10 rounded-2xl border border-cyan-400/20 bg-white/[0.03] w-full max-w-2xl h-[200px]">
-                  <div className="flex items-center justify-center gap-4 text-cyan-400 text-center">
-                    {React.createElement(digitalTwinIcons[digitalTwinIndex], {
-                      size: 36,
-                    })}
-                    <span className="text-2xl md:text-3xl font-semibold text-white">
-                      {digitalTwinItems[digitalTwinIndex]}
-                    </span>
-                  </div>
-                  <div className="flex gap-2 mt-4">
-                    {digitalTwinItems.map((_, i) => (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6 w-full">
+                  {whyImportantCards.map(({ title, description, icon: Icon }, i) => (
+                    <div
+                      key={i}
+                      className="rounded-2xl border border-white/10 bg-white/[0.06] backdrop-blur-xl p-6 md:p-7 text-left hover:bg-white/[0.09] hover:border-cyan-400/20 transition-all duration-300"
+                    >
                       <div
-                        key={i}
-                        className={`w-2 h-2 rounded-full transition-colors ${i === digitalTwinIndex ? "bg-cyan-400" : "bg-white/30"}`}
-                      />
-                    ))}
-                  </div>
+                        className="w-12 h-12 rounded-full flex items-center justify-center mb-4 bg-gradient-to-br from-cyan-400 to-blue-500 text-white shadow-[0_0_20px_rgba(34,211,238,0.3)]"
+                        aria-hidden
+                      >
+                        <Icon size={24} strokeWidth={1.8} />
+                      </div>
+                      <h3 className="text-lg md:text-xl font-bold text-white mb-2">
+                        {title}
+                      </h3>
+                      <p className="text-sm md:text-base text-white/70 leading-relaxed">
+                        {description}
+                      </p>
+                    </div>
+                  ))}
                 </div>
               </FadeUp>
               <FadeUp>
@@ -476,90 +596,65 @@ export default function Home() {
             </div>
           </ScrollSection>
 
-          {/* ========== A world of industry firsts ========== */}
-          <ScrollSection bgClass={getSectionBg(8)}>
-            <div className="relative text-center">
-              <FadeUp>
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white">
-                  A world of industry firsts
-                </h2>
-              </FadeUp>
-              <FadeUp>
-                <p className="mt-8 text-xl md:text-2xl lg:text-3xl text-white/85 max-w-4xl mx-auto leading-relaxed">
-                  MiHub quietly powers a series of industry-first AI
-                  capabilities. We don't reveal everything we do. We don't like
-                  to say too much. But once you've seen MiHub in action, you'll
-                  understand why.
-                </p>
-              </FadeUp>
-            </div>
-          </ScrollSection>
-
-          {/* ========== £15,000 – cost no barrier ========== */}
-          <ScrollSection bgClass={getSectionBg(9)}>
-            <div className="relative text-center">
+          {/* ========== A world of industry firsts (two columns + glowing line) ========== */}
+          <section
+            className={`w-full py-20 md:py-28 lg:py-32 ${getSectionBg(8)}`}
+          >
+            <div className="relative">
               <Orb className="-top-20 right-0" />
-              <FadeUp>
-                <span className="text-xl md:text-2xl lg:text-3xl text-white/80">
-                  With projects starting from{" "}
-                </span>
-                <span className="text-4xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-cyan-400 via-cyan-300 to-emerald-400 text-transparent bg-clip-text">
-                  £15,000
-                </span>
-                <span className="text-xl md:text-2xl lg:text-3xl text-white/80">
-                  , cost is no longer a barrier.
-                </span>
-              </FadeUp>
-              <FadeUp>
-                <p className="mt-8 text-xl md:text-2xl text-white/80 max-w-3xl mx-auto">
-                  How do we do this? That's a closely guarded secret, the fruits
-                  of years of hard-work, blood, sweat and tears and £millions in
-                  R&D.
-                </p>
-              </FadeUp>
-            </div>
-          </ScrollSection>
-
-          {/* ========== We are unique – 1+1=3 ========== */}
-          <ScrollSection bgClass={getSectionBg(10)}>
-            <div className="relative text-center">
               <GridOverlay />
-              <FadeUp>
-                <p className="text-xl md:text-2xl lg:text-3xl text-white/90">
-                  But we can say:{" "}
-                  <strong className="text-cyan-400">"We are unique."</strong>
-                </p>
-              </FadeUp>
-              <FadeUp>
-                <p className="mt-8 text-xl md:text-2xl lg:text-3xl text-white/85 max-w-4xl mx-auto leading-relaxed">
-                  We are the only platform that addresses the whole as a series
-                  of individual challenges, adding value at each and every step
-                  making sure that in the end{" "}
-                  <span className="inline-block font-bold text-4xl md:text-5xl lg:text-6xl bg-gradient-to-r from-cyan-400 to-cyan-300 text-transparent bg-clip-text">
-                    1+1 = 3
-                  </span>{" "}
-                  and often, much, much more.
-                </p>
-              </FadeUp>
             </div>
-          </ScrollSection>
+            <div className={`${SECTION_INNER} relative flex flex-col lg:flex-row gap-12 lg:gap-16 items-start`}>
+              {/* Left: title (gradient on second line), intro, Contact Us */}
+              <div className="flex-1 lg:max-w-md">
+                <FadeUp>
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
+                    A world of{" "}
+                    <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                      industry firsts
+                    </span>
+                  </h2>
+                </FadeUp>
+                <FadeUp>
+                  <p className="mt-6 text-lg md:text-xl text-white/85 leading-relaxed">
+                    MiHub quietly powers a series of industry-first AI capabilities. We don't reveal everything we do. We don't like to say too much. But once you've seen MiHub in action, you'll understand why.
+                  </p>
+                </FadeUp>
+                <FadeUp>
+                  <ScrollToTopLink
+                    to="/contact"
+                    className="mt-8 inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-white/5 px-6 py-4 text-base font-semibold text-white transition-colors hover:bg-white/10 hover:border-cyan-400/50 shadow-[0_0_20px_rgba(34,211,238,0.1)]"
+                  >
+                    <ChevronRight size={20} strokeWidth={2.5} />
+                    Contact Us
+                  </ScrollToTopLink>
+                </FadeUp>
+              </div>
 
-          {/* ========== Genius solution – tagline ========== */}
-          <ScrollSection bgClass={getSectionBg(11)}>
-            <div className="relative text-center">
-              <Orb className="bottom-0 left-0" />
-              <FadeUp>
-                <p className="text-2xl md:text-3xl lg:text-4xl text-white/85 max-w-3xl mx-auto mb-10">
-                  It's a genius solution and hence why we say:
-                </p>
-              </FadeUp>
-              <FadeUp>
-                <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold bg-gradient-to-r from-cyan-400 via-white to-cyan-400 text-transparent bg-clip-text">
-                  MiHub – the world's most advanced real estate AI platform.
-                </h2>
-              </FadeUp>
+              {/* Right: timeline with static glowing line (no dots) */}
+              <div className="flex-1 w-full relative">
+                <div className="relative pl-8 md:pl-10">
+                  {/* Full-height glowing gradient line */}
+                  <div
+                    className="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-cyan-400 to-blue-500 shadow-[0_0_16px_rgba(34,211,238,0.5)]"
+                    aria-hidden
+                  />
+                  {industryFirstsTimeline.map(({ title, description }, i) => (
+                    <FadeUp key={i} className="relative flex gap-4 pb-10 last:pb-0">
+                      <div className="pt-0 pl-2">
+                        <h3 className="text-xl md:text-2xl font-bold text-white">
+                          {title}
+                        </h3>
+                        <p className="mt-2 text-base md:text-lg text-white/75 leading-relaxed">
+                          {description}
+                        </p>
+                      </div>
+                    </FadeUp>
+                  ))}
+                </div>
+              </div>
             </div>
-          </ScrollSection>
+          </section>
 
           {/* ========== CTA – What we can do for you ========== */}
           <ScrollSection bgClass={getSectionBg(14)}>
@@ -580,7 +675,7 @@ export default function Home() {
               </FadeUp>
               <FadeUp>
                 <div className="mt-12">
-                  <Link to="/contact" className="inline-block">
+                  <ScrollToTopLink to="/contact" className="inline-block">
                     <motion.span
                       className="inline-flex items-center gap-2 px-10 py-5 rounded-full font-semibold text-white bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-400 hover:to-cyan-500 transition-all"
                       whileHover={{ scale: 1.03 }}
@@ -589,7 +684,7 @@ export default function Home() {
                       Contact Us
                       <ChevronRight size={22} />
                     </motion.span>
-                  </Link>
+                  </ScrollToTopLink>
                 </div>
               </FadeUp>
             </div>

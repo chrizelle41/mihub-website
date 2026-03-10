@@ -1,4 +1,5 @@
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { ScrollToTopLink } from "./ScrollToTopLink";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
@@ -49,16 +50,9 @@ export default function Navbar() {
       >
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           {/* LOGO */}
-          <Link to="/" className="flex items-center gap-3 group shrink-0">
+          <ScrollToTopLink to="/" className="flex items-center gap-3 group shrink-0">
             <img src={logo} alt="MiHub Logo" className="h-10 w-auto" />
-            <span
-              className="font-extrabold text-2xl tracking-wide 
-              bg-gradient-to-r from-[#1A8CFF] via-[#38BDF8] to-[#6FD2FF]
-              bg-clip-text text-transparent group-hover:opacity-80 transition"
-            >
-              MiHub
-            </span>
-          </Link>
+          </ScrollToTopLink>
 
           {/* DESKTOP NAV */}
           <ul className="hidden min-[1047px]:flex items-center gap-10">
@@ -67,7 +61,7 @@ export default function Navbar() {
               const isActive = location.pathname === link.path;
               return (
                 <li key={link.path} className="relative group">
-                  <Link
+                  <ScrollToTopLink
                     to={link.path}
                     className={`font-medium text-base transition-all ${
                       isActive
@@ -76,7 +70,7 @@ export default function Navbar() {
                     }`}
                   >
                     {link.name}
-                  </Link>
+                  </ScrollToTopLink>
 
                   {/* ACTIVE UNDERLINE */}
                   {isActive && (
@@ -113,13 +107,13 @@ export default function Navbar() {
                   >
                     {solutionLinks.map((item) => (
                       <li key={item.path}>
-                        <Link
+                        <ScrollToTopLink
                           to={item.path}
                           className="block px-4 py-2 text-white/80 hover:text-[#38BDF8] 
                           hover:bg-white/5 transition rounded-md"
                         >
                           {item.name}
-                        </Link>
+                        </ScrollToTopLink>
                       </li>
                     ))}
                   </motion.ul>
@@ -129,7 +123,7 @@ export default function Navbar() {
 
             {/* CONTACT BUTTON */}
             <li>
-              <Link to="/contact">
+              <ScrollToTopLink to="/contact">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -139,7 +133,7 @@ export default function Navbar() {
                 >
                   Contact Us
                 </motion.button>
-              </Link>
+              </ScrollToTopLink>
             </li>
           </ul>
 
@@ -186,7 +180,7 @@ export default function Navbar() {
                 {/* HOME / WHY MIHUB / DATA ROOM */}
                 {mainLinks.map((link) => (
                   <li key={link.path}>
-                    <Link
+                    <ScrollToTopLink
                       to={link.path}
                       className={`text-lg ${
                         location.pathname === link.path
@@ -195,7 +189,7 @@ export default function Navbar() {
                       }`}
                     >
                       {link.name}
-                    </Link>
+                    </ScrollToTopLink>
                   </li>
                 ))}
 
@@ -223,12 +217,12 @@ export default function Navbar() {
                       >
                         {solutionLinks.map((item) => (
                           <li key={item.path}>
-                            <Link
+                            <ScrollToTopLink
                               to={item.path}
                               className="text-white/70 hover:text-[#38BDF8]"
                             >
                               {item.name}
-                            </Link>
+                            </ScrollToTopLink>
                           </li>
                         ))}
                       </motion.ul>
@@ -238,12 +232,12 @@ export default function Navbar() {
 
                 {/* CONTACT */}
                 <li>
-                  <Link
+                  <ScrollToTopLink
                     to="/contact"
                     className="text-lg text-white/80 hover:text-[#38BDF8]"
                   >
                     Contact Us
-                  </Link>
+                  </ScrollToTopLink>
                 </li>
               </ul>
             </motion.div>
