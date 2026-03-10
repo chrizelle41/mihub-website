@@ -306,13 +306,13 @@ export default function Home() {
           <HeroStarsBackground />
           <FadeUp className="relative z-10 text-center px-4 sm:px-5 md:px-6 max-w-6xl mx-auto">
             {/* Small pill badge — blue/cyan glow */}
-            <div className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-1.5 mb-6 sm:mb-8 shadow-[0_0_20px_rgba(34,211,238,0.15)]">
-              <span className="text-sm sm:text-base text-white/80 font-medium">
+            <div className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1.5 sm:px-4 sm:py-1.5 mb-4 sm:mb-6 md:mb-8 shadow-[0_0_20px_rgba(34,211,238,0.15)]">
+              <span className="text-xs sm:text-sm md:text-base text-white/80 font-medium">
                 AI-Powered Building Intelligence
               </span>
             </div>
             {/* Main headline: blue-to-cyan gradient with subtle glow */}
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold tracking-tight leading-[1.05]">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-bold tracking-tight leading-[1.05]">
               <span
                 className="bg-gradient-to-r from-blue-400 via-cyan-400 to-cyan-300 bg-clip-text text-transparent"
                 style={{
@@ -324,7 +324,7 @@ export default function Home() {
               </span>
             </h1>
             {/* Subheading in lighter gray */}
-            <p className="mt-5 sm:mt-6 text-xl sm:text-2xl md:text-3xl lg:text-4xl text-gray-400 font-normal tracking-tight max-w-full mx-auto leading-snug whitespace-nowrap overflow-hidden text-ellipsis text-center">
+            <p className="mt-4 sm:mt-5 md:mt-6 text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl text-gray-400 font-normal tracking-tight max-w-2xl mx-auto leading-snug text-center">
               the world’s most advanced real estate AI platform
             </p>
             {/* Get Started — scrolls to next section */}
@@ -334,7 +334,7 @@ export default function Home() {
                 onClick={scrollToNext}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center gap-2 rounded-full border-2 border-white/90 bg-white/5 px-8 py-4 text-lg font-semibold text-white transition-all hover:bg-white/10 hover:border-white"
+                className="inline-flex items-center gap-2 rounded-full border-2 border-white/90 bg-white/5 px-5 py-3 sm:px-6 sm:py-3.5 md:px-8 md:py-4 text-base sm:text-lg font-semibold text-white transition-all hover:bg-white/10 hover:border-white"
               >
                 <ChevronRight size={22} strokeWidth={2.5} />
                 Get Started
