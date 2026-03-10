@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { Zap, Target, Layers, Handshake, ChevronRight } from "lucide-react";
+import { Cpu, ShieldCheck, BrainCircuit, FileCheck } from "lucide-react";
 
 import vv from "../assets/vv.png";
 import dome from "../assets/dome.png";
@@ -20,10 +21,18 @@ function ScrollSection({ children, className = "", bgClass, id }) {
   const opacity = useTransform(
     scrollYProgress,
     [0, 0.2, 0.38, 0.62, 0.8, 1],
-    [0, 0.85, 1, 1, 0.85, 0]
+    [0, 0.85, 1, 1, 0.85, 0],
   );
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.5, 0.8, 1], [0.97, 0.99, 1, 0.99, 0.97]);
-  const y = useTransform(scrollYProgress, [0, 0.25, 0.5, 0.75, 1], [20, 8, 0, -8, -20]);
+  const scale = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.5, 0.8, 1],
+    [0.97, 0.99, 1, 0.99, 0.97],
+  );
+  const y = useTransform(
+    scrollYProgress,
+    [0, 0.25, 0.5, 0.75, 1],
+    [20, 8, 0, -8, -20],
+  );
 
   return (
     <motion.section
@@ -136,9 +145,7 @@ export default function WhyMiHub() {
         <div className="relative text-center">
           <Orb className="-bottom-32 right-0" />
           <FadeUp>
-            <h2
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white"
-            >
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white">
               What Makes MiHub Different
             </h2>
           </FadeUp>
@@ -148,47 +155,51 @@ export default function WhyMiHub() {
                 {
                   icon: Zap,
                   title: "Cheaper, quicker, more efficient",
-                  description: "Real, measurable benefit—not another layer of process.",
+                  description:
+                    "Real, measurable benefit—not another layer of process.",
                 },
                 {
                   icon: Target,
                   title: "Real measurable benefit",
-                  description: "Value that counts for an already taxed industry.",
+                  description:
+                    "Value that counts for an already taxed industry.",
                 },
                 {
                   icon: Layers,
                   title: "Cradle to completion",
-                  description: "One platform across construction and operations—you can't find it elsewhere.",
+                  description:
+                    "One platform across construction and operations—you can't find it elsewhere.",
                 },
                 {
                   icon: Handshake,
                   title: "Partner of choice",
-                  description: "Complete solution with legacy suppliers; seamless adoption.",
+                  description:
+                    "Complete solution with legacy suppliers; seamless adoption.",
                 },
               ].map((item, i) => {
                 const Icon = item.icon;
                 return (
-                <span key={i} className="contents">
-                  <div className="flex flex-col items-center text-center w-full lg:min-w-0 lg:max-w-[220px] xl:max-w-[260px]">
-                    <div className="w-14 h-14 lg:w-12 lg:h-12 xl:w-14 xl:h-14 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-white shadow-[0_0_24px_rgba(34,211,238,0.3)] mb-3">
-                      <Icon size={24} strokeWidth={1.5} />
+                  <span key={i} className="contents">
+                    <div className="flex flex-col items-center text-center w-full lg:min-w-0 lg:max-w-[220px] xl:max-w-[260px]">
+                      <div className="w-14 h-14 lg:w-12 lg:h-12 xl:w-14 xl:h-14 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-white shadow-[0_0_24px_rgba(34,211,238,0.3)] mb-3">
+                        <Icon size={24} strokeWidth={1.5} />
+                      </div>
+                      <h4 className="text-base lg:text-sm xl:text-lg font-bold text-white mb-1">
+                        {item.title}
+                      </h4>
+                      <p className="text-sm text-white/75 leading-snug">
+                        {item.description}
+                      </p>
                     </div>
-                    <h4 className="text-base lg:text-sm xl:text-lg font-bold text-white mb-1">
-                      {item.title}
-                    </h4>
-                    <p className="text-sm text-white/75 leading-snug">
-                      {item.description}
-                    </p>
-                  </div>
-                  {i < 4 - 1 && (
-                    <ChevronRight
-                      size={24}
-                      className="text-cyan-400/70 shrink-0 hidden lg:block self-center flex-shrink-0"
-                      aria-hidden
-                    />
-                  )}
-                </span>
-              );
+                    {i < 4 - 1 && (
+                      <ChevronRight
+                        size={24}
+                        className="text-cyan-400/70 shrink-0 hidden lg:block self-center flex-shrink-0"
+                        aria-hidden
+                      />
+                    )}
+                  </span>
+                );
               })}
             </div>
           </FadeUp>
@@ -331,38 +342,95 @@ export default function WhyMiHub() {
           </FadeUp>
         </div>
       </ScrollSection>
-
       {/* ========== THE FUTURE OF MIHUB ========== */}
-      <ScrollSection bgClass={getSectionBg(5)} id="future">
+      <ScrollSection
+        bgClass={getSectionBg(5)}
+        id="future"
+        className="py-32 md:py-40 lg:py-48"
+      >
         <div className="relative text-center">
           <Orb className="-left-40 top-1/2 -translate-y-1/2" />
+
+          {/* Section Title */}
           <FadeUp>
             <h2
               className="text-4xl md:text-5xl font-extrabold
-                bg-gradient-to-r from-[#1A8CFF] via-[#38BDF8] to-[#6FD2FF]
-                bg-clip-text text-transparent"
+          bg-gradient-to-r from-[#1A8CFF] via-[#38BDF8] to-[#6FD2FF]
+          bg-clip-text text-transparent"
             >
               The Future of MiHub
             </h2>
           </FadeUp>
+
+          {/* Horizontal Roadmap */}
           <FadeUp>
-            <p className="mt-10 text-xl md:text-2xl text-white/70 max-w-5xl mx-auto leading-relaxed">
-              MiHub is evolving into a self-maintaining ecosystem powered by AI.
-              From automated data validation to predictive maintenance and
-              compliance alerts, MiHub will soon monitor building health without
-              manual intervention.
-            </p>
-          </FadeUp>
-          <FadeUp>
-            <p className="mt-8 text-xl md:text-2xl text-white/70 max-w-5xl mx-auto leading-relaxed">
-              Automated EPC generation will ensure every building can access
-              accurate, up-to-date ratings instantly — all generated from the
-              living data inside MiHub.
-            </p>
+            <div className="mt-16 relative max-w-6xl mx-auto">
+              {/* dashed connector line */}
+              <div className="absolute top-10 left-0 right-0 h-[2px] border-t-2 border-dashed border-cyan-400/30 hidden md:block" />
+
+              <div className="grid md:grid-cols-4 gap-10 relative">
+                {[
+                  {
+                    icon: Cpu,
+                    title: "Predictive Maintenance",
+                    desc: "Detect asset issues before failures occur.",
+                  },
+                  {
+                    icon: ShieldCheck,
+                    title: "Automated Compliance",
+                    desc: "Continuous validation keeps building data audit-ready.",
+                  },
+                  {
+                    icon: BrainCircuit,
+                    title: "AI Data Validation",
+                    desc: "AI identifies incomplete or inconsistent building data.",
+                  },
+                  {
+                    icon: FileCheck,
+                    title: "Instant EPC Generation",
+                    desc: "Generate accurate EPC ratings directly from live data.",
+                  },
+                ].map((item, i) => {
+                  const Icon = item.icon;
+
+                  return (
+                    <motion.div
+                      key={i}
+                      whileHover={{ y: -8, scale: 1.03 }}
+                      className="text-center relative flex flex-col items-center"
+                    >
+                      {/* icon */}
+                      <div
+                        className="w-16 h-16 mx-auto rounded-2xl
+          bg-gradient-to-br from-cyan-400 to-blue-500
+          flex items-center justify-center
+          shadow-[0_0_30px_rgba(34,211,238,0.4)]"
+                      >
+                        <Icon size={28} />
+                      </div>
+
+                      {/* title */}
+                      <h3 className="mt-6 text-lg md:text-xl font-bold text-white">
+                        {item.title}
+                      </h3>
+
+                      {/* description */}
+                      <p className="text-white/70 text-sm md:text-base mt-2 max-w-[220px]">
+                        {item.desc}
+                      </p>
+
+                      {/* vertical connector for mobile */}
+                      {i < 3 && (
+                        <div className="md:hidden w-[2px] h-16 bg-cyan-400/30 mt-6 mx-auto rounded" />
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
           </FadeUp>
         </div>
       </ScrollSection>
-
       {/* ========== IMAGINE WHAT'S POSSIBLE ========== */}
       <ScrollSection bgClass={getSectionBg(6)} id="imagine">
         <div className="relative text-center">

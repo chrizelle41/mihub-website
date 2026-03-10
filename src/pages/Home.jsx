@@ -49,10 +49,7 @@ function ScrollSection({ children, className = "", bgClass, id }) {
       style={{ opacity }}
       className={`w-full flex flex-col items-center relative py-20 md:py-28 lg:py-32 ${bgClass} ${className}`}
     >
-      <motion.div
-        style={{ scale, y }}
-        className={`${SECTION_INNER} relative`}
-      >
+      <motion.div style={{ scale, y }} className={`${SECTION_INNER} relative`}>
         {children}
       </motion.div>
     </motion.section>
@@ -138,32 +135,36 @@ function HeroStarsBackground() {
         style={{ willChange: "transform" }}
         aria-hidden
       >
-        {starPositions.filter((s) => !s.slow).map((s, i) => (
-          <circle
-            key={i}
-            cx={`${s.x}%`}
-            cy={`${s.y}%`}
-            r={s.r}
-            fill="white"
-            opacity={s.o}
-          />
-        ))}
+        {starPositions
+          .filter((s) => !s.slow)
+          .map((s, i) => (
+            <circle
+              key={i}
+              cx={`${s.x}%`}
+              cy={`${s.y}%`}
+              r={s.r}
+              fill="white"
+              opacity={s.o}
+            />
+          ))}
       </svg>
       <svg
         className="absolute inset-0 w-full h-full animate-star-drift-slow"
         style={{ willChange: "transform" }}
         aria-hidden
       >
-        {starPositions.filter((s) => s.slow).map((s, i) => (
-          <circle
-            key={i}
-            cx={`${s.x}%`}
-            cy={`${s.y}%`}
-            r={s.r}
-            fill="white"
-            opacity={s.o}
-          />
-        ))}
+        {starPositions
+          .filter((s) => s.slow)
+          .map((s, i) => (
+            <circle
+              key={i}
+              cx={`${s.x}%`}
+              cy={`${s.y}%`}
+              r={s.r}
+              fill="white"
+              opacity={s.o}
+            />
+          ))}
       </svg>
       {/* Subtle blue-to-cyan light streaks only */}
       <div
@@ -216,73 +217,84 @@ const apiFeatures = [
 const whyImportantCards = [
   {
     title: "Risks across the whole building",
-    description: "Identify and track risks across the entire building lifecycle in one place.",
+    description:
+      "Identify and track risks across the entire building lifecycle in one place.",
     icon: AlertTriangle,
   },
   {
     title: "Compliance issues",
-    description: "Stay on top of regulatory and compliance requirements with clear visibility.",
+    description:
+      "Stay on top of regulatory and compliance requirements with clear visibility.",
     icon: Shield,
   },
   {
     title: "Damp & Mould (Awaab's Law)",
-    description: "Monitor conditions and meet Awaab's Law obligations with proactive insights.",
+    description:
+      "Monitor conditions and meet Awaab's Law obligations with proactive insights.",
     icon: AlertTriangle,
   },
   {
     title: "Fire risks",
-    description: "Understand and mitigate fire safety risks with integrated data and reporting.",
+    description:
+      "Understand and mitigate fire safety risks with integrated data and reporting.",
     icon: Flame,
   },
   {
     title: "Building Safety Act compliance",
-    description: "Navigate Building Safety Act requirements with structured, auditable data.",
+    description:
+      "Navigate Building Safety Act requirements with structured, auditable data.",
     icon: Scale,
   },
   {
     title: "Evacuation compliance (Martyn's Law)",
-    description: "Plan and demonstrate evacuation and Martyn's Law compliance effectively.",
+    description:
+      "Plan and demonstrate evacuation and Martyn's Law compliance effectively.",
     icon: Users,
   },
   {
     title: "Remediation costs",
-    description: "Model and track remediation costs with clearer forecasting and visibility.",
+    description:
+      "Model and track remediation costs with clearer forecasting and visibility.",
     icon: FileStack,
   },
   {
     title: "Disposal costs",
-    description: "Understand end-of-life and disposal costs as part of the full picture.",
+    description:
+      "Understand end-of-life and disposal costs as part of the full picture.",
     icon: FileStack,
   },
 ];
 
 const industryFirstsTimeline = [
   {
-    title: "Industry-first AI",
+    title: "Industry-first AI for buildings",
     description:
-      "MiHub quietly powers a series of industry-first AI capabilities. We don't reveal everything we do. We don't like to say too much. But once you've seen MiHub in action, you'll understand why.",
+      "MiHub introduces AI capabilities designed specifically for the built environment — turning complex operational data into clear insight, prediction, and action.",
   },
   {
-    title: "From £15,000",
+    title: "Access without the traditional cost barrier",
     description:
-      "With projects starting from £15,000, cost is no longer a barrier. How do we do this? That's a closely guarded secret, the fruits of years of hard-work, blood, sweat and tears and £millions in R&D.",
+      "With projects starting from £15,000, MiHub makes advanced digital building intelligence accessible to organisations that previously couldn't justify the cost.",
   },
   {
-    title: "We are unique",
-    description: 'But we can say: "We are unique."',
+    title: "One platform for the entire lifecycle",
+    description:
+      "MiHub connects operational data, documents, models, sensors, and systems into a single intelligent platform — eliminating fragmented tools and disconnected information.",
   },
   {
-    title: "1+1 = 3",
+    title: "More value than the sum of its parts",
     description:
-      "We are the only platform that addresses the whole as a series of individual challenges, adding value at each and every step making sure that in the end 1+1 = 3 and often, much, much more.",
+      "By connecting every dataset and system together, MiHub creates insights that individual tools cannot deliver — transforming isolated information into powerful building intelligence.",
   },
 ];
-
 export default function Home() {
   const nextSectionRef = useRef(null);
 
   const scrollToNext = () => {
-    nextSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    nextSectionRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   };
 
   return (
@@ -380,10 +392,15 @@ export default function Home() {
                       Buildings are complex
                     </h4>
                     <p className="text-sm md:text-base text-white/75 leading-relaxed">
-                      They produce a lot of data. MiHub brings it together in one place.
+                      They produce a lot of data. MiHub brings it together in
+                      one place.
                     </p>
                   </div>
-                  <ChevronRight size={28} className="text-cyan-400/70 shrink-0 hidden md:block" aria-hidden />
+                  <ChevronRight
+                    size={28}
+                    className="text-cyan-400/70 shrink-0 hidden md:block"
+                    aria-hidden
+                  />
                   <div className="flex flex-col items-center text-center max-w-xs">
                     <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-white shadow-[0_0_24px_rgba(34,211,238,0.3)] mb-4">
                       <Database size={28} strokeWidth={1.5} />
@@ -392,10 +409,15 @@ export default function Home() {
                       Cut through the noise
                     </h4>
                     <p className="text-sm md:text-base text-white/75 leading-relaxed">
-                      All too often that data is inaccessible, or there is simply so much information that it becomes overwhelming.
+                      All too often that data is inaccessible, or there is
+                      simply so much information that it becomes overwhelming.
                     </p>
                   </div>
-                  <ChevronRight size={28} className="text-cyan-400/70 shrink-0 hidden md:block" aria-hidden />
+                  <ChevronRight
+                    size={28}
+                    className="text-cyan-400/70 shrink-0 hidden md:block"
+                    aria-hidden
+                  />
                   <div className="flex flex-col items-center text-center max-w-xs">
                     <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-white shadow-[0_0_24px_rgba(34,211,238,0.3)] mb-4">
                       <LayoutGrid size={28} strokeWidth={1.5} />
@@ -404,7 +426,8 @@ export default function Home() {
                       See what you need
                     </h4>
                     <p className="text-sm md:text-base text-white/75 leading-relaxed">
-                      MiHub lets you cut through the noise to see and understand the data that you need to know.
+                      MiHub lets you cut through the noise to see and understand
+                      the data that you need to know.
                     </p>
                   </div>
                 </div>
@@ -513,25 +536,27 @@ export default function Home() {
               </FadeUp>
               <FadeUp>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6 w-full">
-                  {whyImportantCards.map(({ title, description, icon: Icon }, i) => (
-                    <div
-                      key={i}
-                      className="rounded-2xl border border-white/10 bg-white/[0.06] backdrop-blur-xl p-6 md:p-7 text-left hover:bg-white/[0.09] hover:border-cyan-400/20 transition-all duration-300"
-                    >
+                  {whyImportantCards.map(
+                    ({ title, description, icon: Icon }, i) => (
                       <div
-                        className="w-12 h-12 rounded-full flex items-center justify-center mb-4 bg-gradient-to-br from-cyan-400 to-blue-500 text-white shadow-[0_0_20px_rgba(34,211,238,0.3)]"
-                        aria-hidden
+                        key={i}
+                        className="rounded-2xl border border-white/10 bg-white/[0.06] backdrop-blur-xl p-6 md:p-7 text-left hover:bg-white/[0.09] hover:border-cyan-400/20 transition-all duration-300"
                       >
-                        <Icon size={24} strokeWidth={1.8} />
+                        <div
+                          className="w-12 h-12 rounded-full flex items-center justify-center mb-4 bg-gradient-to-br from-cyan-400 to-blue-500 text-white shadow-[0_0_20px_rgba(34,211,238,0.3)]"
+                          aria-hidden
+                        >
+                          <Icon size={24} strokeWidth={1.8} />
+                        </div>
+                        <h3 className="text-lg md:text-xl font-bold text-white mb-2">
+                          {title}
+                        </h3>
+                        <p className="text-sm md:text-base text-white/70 leading-relaxed">
+                          {description}
+                        </p>
                       </div>
-                      <h3 className="text-lg md:text-xl font-bold text-white mb-2">
-                        {title}
-                      </h3>
-                      <p className="text-sm md:text-base text-white/70 leading-relaxed">
-                        {description}
-                      </p>
-                    </div>
-                  ))}
+                    ),
+                  )}
                 </div>
               </FadeUp>
               <FadeUp>
@@ -604,7 +629,9 @@ export default function Home() {
               <Orb className="-top-20 right-0" />
               <GridOverlay />
             </div>
-            <div className={`${SECTION_INNER} relative flex flex-col lg:flex-row gap-12 lg:gap-16 items-start`}>
+            <div
+              className={`${SECTION_INNER} relative flex flex-col lg:flex-row gap-12 lg:gap-16 items-start`}
+            >
               {/* Left: title (gradient on second line), intro, Contact Us */}
               <div className="flex-1 lg:max-w-md">
                 <FadeUp>
@@ -617,7 +644,10 @@ export default function Home() {
                 </FadeUp>
                 <FadeUp>
                   <p className="mt-6 text-lg md:text-xl text-white/85 leading-relaxed">
-                    MiHub quietly powers a series of industry-first AI capabilities. We don't reveal everything we do. We don't like to say too much. But once you've seen MiHub in action, you'll understand why.
+                    MiHub quietly powers a series of industry-first AI
+                    capabilities. We don't reveal everything we do. We don't
+                    like to say too much. But once you've seen MiHub in action,
+                    you'll understand why.
                   </p>
                 </FadeUp>
                 <FadeUp>
@@ -640,7 +670,10 @@ export default function Home() {
                     aria-hidden
                   />
                   {industryFirstsTimeline.map(({ title, description }, i) => (
-                    <FadeUp key={i} className="relative flex gap-4 pb-10 last:pb-0">
+                    <FadeUp
+                      key={i}
+                      className="relative flex gap-4 pb-10 last:pb-0"
+                    >
                       <div className="pt-0 pl-2">
                         <h3 className="text-xl md:text-2xl font-bold text-white">
                           {title}
