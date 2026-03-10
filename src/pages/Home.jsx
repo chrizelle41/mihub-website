@@ -324,8 +324,8 @@ export default function Home() {
               </span>
             </h1>
             {/* Subheading in lighter gray */}
-            <p className="mt-5 sm:mt-6 text-xl sm:text-2xl md:text-3xl lg:text-4xl text-gray-400 font-normal tracking-tight max-w-2xl mx-auto leading-snug">
-              the world's most advanced ai platform
+            <p className="mt-5 sm:mt-6 text-xl sm:text-2xl md:text-3xl lg:text-4xl text-gray-400 font-normal tracking-tight max-w-full mx-auto leading-snug whitespace-nowrap overflow-hidden text-ellipsis text-center">
+              the world’s most advanced real estate AI platform
             </p>
             {/* Get Started — scrolls to next section */}
             <div className="mt-8 sm:mt-10">
