@@ -63,22 +63,23 @@ const features = [
 
 export default function PropertyManagement() {
   return (
-    <div className="w-full min-h-screen bg-gradient-to-b from-[#05070A] via-[#0A0F18] to-[#05070A] text-white pt-28 pb-24 px-6 relative overflow-hidden">
+    <div className="w-full min-h-screen bg-gradient-to-b from-[#05070A] via-[#0A0F18] to-[#05070A] text-white pt-32 md:pt-36 pb-20 px-4 sm:px-5 md:px-6 relative overflow-hidden">
       {/* Background blobs */}
       <div className="absolute -top-20 -left-20 w-72 h-72 bg-[#2385BE]/20 blur-3xl rounded-full pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-80 h-80 bg-[#3EBBFF]/15 blur-3xl rounded-full pointer-events-none" />
 
-      <div className="relative z-10 max-w-5xl mx-auto">
+      <div className="relative z-10 max-w-6xl mx-auto">
         {/* PAGE TITLE */}
-        <section className="text-center mb-20">
+        <section className="text-center mb-14 pt-2">
           <motion.h1
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-5xl md:text-6xl font-extrabold
-              bg-gradient-to-r from-[#1A8CFF] via-[#38BDF8] to-[#6FD2FF]
-              text-transparent bg-clip-text"
+            className="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-cyan-400 via-cyan-300 to-blue-500 bg-clip-text text-transparent pb-2 leading-tight"
+            style={{
+              filter: "drop-shadow(0 0 20px rgba(34,211,238,0.5)) drop-shadow(0 0 40px rgba(56,189,248,0.3))",
+            }}
           >
             MiHub Property Management
           </motion.h1>
@@ -97,7 +98,7 @@ export default function PropertyManagement() {
         </section>
 
         {/* FEATURE CARDS */}
-        <section className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+        <section className="grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6 w-full">
           {features.map(({ title, description, icon: Icon }, index) => (
             <motion.div
               key={title}

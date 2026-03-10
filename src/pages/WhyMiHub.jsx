@@ -305,7 +305,7 @@ export default function WhyMiHub() {
           <GridOverlay />
           <FadeUp>
             <h2
-              className="text-4xl md:text-5xl font-extrabold
+              className="text-4xl md:text-5xl font-extrabold pb-2 leading-tight
                 bg-gradient-to-r from-[#1A8CFF] via-[#38BDF8] to-[#6FD2FF]
                 bg-clip-text text-transparent"
             >
@@ -369,7 +369,7 @@ export default function WhyMiHub() {
           <GridOverlay />
           <FadeUp>
             <h2
-              className="text-4xl md:text-5xl font-extrabold
+              className="text-4xl md:text-5xl font-extrabold pb-2 leading-tight
                 bg-gradient-to-r from-[#1A8CFF] via-[#38BDF8] to-[#6FD2FF]
                 bg-clip-text text-transparent"
             >
