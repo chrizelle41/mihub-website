@@ -350,7 +350,7 @@ export default function Home() {
               <Orb className="-top-40 -left-40" />
               <GridOverlay />
               <FadeUp>
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">
                   Why{" "}
                   <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
                     MiHub
@@ -358,13 +358,13 @@ export default function Home() {
                 </h2>
               </FadeUp>
               <FadeUp>
-                <p className="mt-8 text-xl md:text-2xl lg:text-3xl text-white/90 max-w-4xl mx-auto leading-relaxed">
+                <p className="mt-6 text-lg md:text-xl lg:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed">
                   MiHub lets you see all you need to know about your building,
                   yesterday, today and for tomorrow.
                 </p>
               </FadeUp>
               <FadeUp>
-                <p className="mt-6 text-lg md:text-xl lg:text-2xl text-white/80 max-w-3xl mx-auto">
+                <p className="mt-4 text-base md:text-lg lg:text-xl text-white/80 max-w-3xl mx-auto">
                   It doesn't just help you see what's happening now, it helps
                   you understand what's about to happen next.
                 </p>
@@ -377,7 +377,7 @@ export default function Home() {
             <div className="relative text-center">
               <Orb className="-bottom-32 right-0" />
               <FadeUp>
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
                   All your building data in one place
                 </h2>
               </FadeUp>
@@ -388,10 +388,10 @@ export default function Home() {
                     <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-white shadow-[0_0_24px_rgba(34,211,238,0.3)] mb-4">
                       <Layers size={28} strokeWidth={1.5} />
                     </div>
-                    <h4 className="text-lg md:text-xl font-bold text-white mb-2">
+                    <h4 className="text-base md:text-lg font-bold text-white mb-2">
                       Buildings are complex
                     </h4>
-                    <p className="text-sm md:text-base text-white/75 leading-relaxed">
+                    <p className="text-sm text-white/75 leading-relaxed">
                       They produce a lot of data. MiHub brings it together in
                       one place.
                     </p>
@@ -405,10 +405,10 @@ export default function Home() {
                     <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-white shadow-[0_0_24px_rgba(34,211,238,0.3)] mb-4">
                       <Database size={28} strokeWidth={1.5} />
                     </div>
-                    <h4 className="text-lg md:text-xl font-bold text-white mb-2">
+                    <h4 className="text-base md:text-lg font-bold text-white mb-2">
                       Cut through the noise
                     </h4>
-                    <p className="text-sm md:text-base text-white/75 leading-relaxed">
+                    <p className="text-sm text-white/75 leading-relaxed">
                       All too often that data is inaccessible, or there is
                       simply so much information that it becomes overwhelming.
                     </p>
@@ -422,10 +422,10 @@ export default function Home() {
                     <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-white shadow-[0_0_24px_rgba(34,211,238,0.3)] mb-4">
                       <LayoutGrid size={28} strokeWidth={1.5} />
                     </div>
-                    <h4 className="text-lg md:text-xl font-bold text-white mb-2">
+                    <h4 className="text-base md:text-lg font-bold text-white mb-2">
                       See what you need
                     </h4>
-                    <p className="text-sm md:text-base text-white/75 leading-relaxed">
+                    <p className="text-sm text-white/75 leading-relaxed">
                       MiHub lets you cut through the noise to see and understand
                       the data that you need to know.
                     </p>
@@ -440,7 +440,7 @@ export default function Home() {
             <div className="relative">
               <GridOverlay />
               <FadeUp>
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center text-white mb-8">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center text-white mb-8">
                   Our openAPI protocol means that we can configure your MiHub to
                   view:
                 </h2>
@@ -455,7 +455,7 @@ export default function Home() {
                       <div className="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center text-cyan-400 mb-3">
                         <Icon size={24} strokeWidth={1.5} />
                       </div>
-                      <span className="text-base md:text-lg font-medium text-white/90 text-center">
+                      <span className="text-sm md:text-base font-medium text-white/90 text-center">
                         {label}
                       </span>
                     </div>
@@ -463,7 +463,7 @@ export default function Home() {
                 </div>
               </FadeUp>
               <FadeUp>
-                <p className="mt-12 text-center text-xl md:text-2xl text-white/80 max-w-3xl mx-auto">
+                <p className="mt-10 text-center text-base md:text-lg lg:text-xl text-white/80 max-w-3xl mx-auto">
                   No more jumping between tools or systems. Just one source,
                   always up to date and always learning.
                 </p>
@@ -481,11 +481,11 @@ export default function Home() {
 
               {/* text - right */}
               <FadeUp className="flex-1 text-center lg:text-right order-1 lg:order-2">
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 text-transparent bg-clip-text">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 text-transparent bg-clip-text">
                   Every feature, powered by our own AI
                 </h2>
 
-                <p className="mt-8 text-xl md:text-2xl lg:text-3xl text-white/85 leading-relaxed">
+                <p className="mt-6 text-lg md:text-xl lg:text-2xl text-white/85 leading-relaxed">
                   MiHub is fully AI-enabled. Every insight, automation, and
                   prediction comes from our own AI engine trained specifically
                   on your data.
@@ -498,10 +498,10 @@ export default function Home() {
           <ScrollSection bgClass="bg-black">
             <div className="relative flex flex-col lg:flex-row items-center gap-12 lg:gap-16 w-full">
               <FadeUp className="flex-1 min-w-0 lg:max-w-md">
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
                   The Digital Twin
                 </h2>
-                <p className="mt-8 text-xl md:text-2xl lg:text-3xl text-white/85 leading-relaxed">
+                <p className="mt-6 text-lg md:text-xl lg:text-2xl text-white/85 leading-relaxed">
                   MiHub gives you more than just day-to-day management. MiHub is
                   your starting point for creating your building's digital twin.
                 </p>
@@ -524,12 +524,12 @@ export default function Home() {
             <div className="relative w-full text-center">
               <GridOverlay />
               <FadeUp>
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
                   Why is this important?
                 </h2>
               </FadeUp>
               <FadeUp>
-                <p className="text-xl md:text-2xl lg:text-3xl text-white/85 max-w-4xl mx-auto mb-12">
+                <p className="text-lg md:text-xl lg:text-2xl text-white/85 max-w-4xl mx-auto mb-10">
                   It's important because in the future, your building's digital
                   twin will help you and the building's owners understand:
                 </p>
@@ -548,10 +548,10 @@ export default function Home() {
                         >
                           <Icon size={24} strokeWidth={1.8} />
                         </div>
-                        <h3 className="text-lg md:text-xl font-bold text-white mb-2">
+                        <h3 className="text-base md:text-lg font-bold text-white mb-2">
                           {title}
                         </h3>
-                        <p className="text-sm md:text-base text-white/70 leading-relaxed">
+                        <p className="text-sm text-white/70 leading-relaxed">
                           {description}
                         </p>
                       </div>
@@ -560,7 +560,7 @@ export default function Home() {
                 </div>
               </FadeUp>
               <FadeUp>
-                <p className="mt-12 text-xl md:text-2xl text-white/80 max-w-3xl mx-auto">
+                <p className="mt-10 text-base md:text-lg lg:text-xl text-white/80 max-w-3xl mx-auto">
                   It'll even help you at the time of transaction by being an
                   AI-powered data room.
                 </p>
@@ -573,12 +573,12 @@ export default function Home() {
             <div className="relative text-center">
               <Orb className="top-1/2 -translate-y-1/2 -right-20" />
               <FadeUp>
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
                   For Building Managers
                 </h2>
               </FadeUp>
               <FadeUp>
-                <p className="mt-8 text-xl md:text-2xl lg:text-3xl text-white/85 max-w-4xl mx-auto leading-relaxed">
+                <p className="mt-6 text-lg md:text-xl lg:text-2xl text-white/85 max-w-4xl mx-auto leading-relaxed">
                   Whether you're managing a single building or an entire
                   portfolio, MiHub's powerful dashboards and predictive
                   analytics changes how you see, manage, and understand your
@@ -597,7 +597,7 @@ export default function Home() {
               <Orb className="-left-40 top-0" />
               <GridOverlay />
               <FadeUp>
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-cyan-400 to-cyan-300 text-transparent bg-clip-text">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-cyan-400 to-cyan-300 text-transparent bg-clip-text">
                   The Data Room — Live. Intelligent. Always current.
                 </h2>
               </FadeUp>
@@ -609,7 +609,7 @@ export default function Home() {
                 />
               </FadeUp>
               <FadeUp>
-                <p className="text-xl md:text-2xl lg:text-3xl text-white/85 max-w-4xl mx-auto leading-relaxed">
+                <p className="text-lg md:text-xl lg:text-2xl text-white/85 max-w-4xl mx-auto leading-relaxed">
                   A constantly updating data room for your building. Every
                   document, drawing, log, sensor reading, and report,
                   automatically organised, securely stored, and continuously
@@ -695,12 +695,12 @@ export default function Home() {
               <Orb className="-top-40 left-1/2 -translate-x-1/2" />
               <GridOverlay />
               <FadeUp>
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
                   What we can do for you
                 </h2>
               </FadeUp>
               <FadeUp>
-                <p className="mt-8 text-xl md:text-2xl lg:text-3xl text-white/85 max-w-3xl mx-auto">
+                <p className="mt-6 text-lg md:text-xl lg:text-2xl text-white/85 max-w-3xl mx-auto">
                   Every organisation's needs are unique. That's why MiHub is
                   designed to adapt. But we won't list every feature here. Get
                   in touch to find out what MiHub can do for you.

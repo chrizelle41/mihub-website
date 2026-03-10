@@ -460,10 +460,18 @@ export default function WhyMiHub() {
         <div className="relative text-center">
           <Orb className="-bottom-32 left-1/2 -translate-x-1/2" />
           <FadeUp>
-            <p className="text-2xl md:text-3xl text-white/80 max-w-5xl mx-auto leading-relaxed">
+            <p className="text-2xl md:text-3xl text-white/90 max-w-5xl mx-auto leading-relaxed rounded-2xl border border-cyan-400/20 bg-white/[0.04] px-6 py-8 md:px-10 md:py-10 shadow-[0_0_40px_rgba(34,211,238,0.12),0_0_80px_rgba(56,189,248,0.06)]">
               All the information about a building — for developers, owners, and
               occupiers — unified in one intelligent platform.{" "}
-              <span className="font-extrabold text-[#38BDF8]">MiHub.</span>
+              <span
+                className="font-extrabold bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent"
+                style={{
+                  filter:
+                    "drop-shadow(0 0 20px rgba(34,211,238,0.5)) drop-shadow(0 0 40px rgba(56,189,248,0.25))",
+                }}
+              >
+                MiHub.
+              </span>
             </p>
           </FadeUp>
         </div>

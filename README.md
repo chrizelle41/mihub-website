@@ -18,10 +18,18 @@ If you are developing a production application, we recommend using TypeScript wi
 
 ## Deploy (for teammate)
 
-**You can give either:** the full project (so they can change env and rebuild) **or** a readymade `dist/` folder (faster, but env is already baked in).
+**Sending only `dist` is fine.** Nothing will be broken. Env vars (EmailJS, optional Google Maps) are **baked into the build** when you run `npm run build`, so the zip does not need a `.env` file. The Contact form will use whatever keys were in your `.env` when you built. Your teammate only needs to host the files.
 
-**Why images/resources broke last time:** The app is built with a base path. If it does not match where the site is served, every asset (images, JS, CSS) 404s. This build uses base `/`, so it **must be deployed at the root** of the domain (e.g. `https://mihub.ai/`), not in a subfolder.
+**You can give either:**
+- **Readymade `dist/`** – faster; teammate just hosts it. No env setup.
+- **Full project** – if they need to use their own EmailJS/Google Maps keys or change code; they copy `.env.example` to `.env`, fill it, then `npm install` and `npm run build`.
 
-**If you give readymade dist:** (1) You run `npm run build`, then zip the **contents** of `dist/` (zip should contain `index.html` and `assets/` at top level). (2) Teammate uploads that and deploys at the **root** of the domain (no subfolder). (3) Host must serve `index.html` for all routes (SPA fallback) so `/contact` etc. work.
+**Important (why assets broke before):** The site is built with base `/`. It **must be deployed at the root** of the domain (e.g. `https://mihub.ai/`), not in a subfolder, or images/JS/CSS will 404.
 
-**If you give the full project:** Teammate copies `.env.example` to `.env`, fills it in, runs `npm install` and `npm run build`, then deploys `dist/` at the **root** of the domain. Same SPA fallback requirement.
+**If you send readymade dist:**  
+1. Run `npm run build`, then zip the **contents** of `dist/` (zip should have `index.html` and `assets/` at the top level, not a `dist` folder inside).  
+2. Teammate uploads that and deploys at the **root** of the domain.  
+3. Host must serve `index.html` for all routes (SPA fallback) so `/contact`, `/why-mihub`, etc. work.
+
+**If you send the full project:**  
+Teammate: copy `.env.example` to `.env`, add your keys, run `npm install` and `npm run build`, then deploy the new `dist/` at the **root** of the domain. Same SPA fallback requirement.
