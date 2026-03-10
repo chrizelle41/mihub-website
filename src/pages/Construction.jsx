@@ -9,7 +9,10 @@ import iBID from "../assets/ibid.png";
 import ReportIt from "../assets/report.png";
 import In1Place from "../assets/in1Place.png";
 import SlimBIM from "../assets/slimbim.png";
-import Placeholder from "../assets/17.png"; // Digital Twin, Digital O&Ms, Digital Training Guides placeholder
+import Placeholder from "../assets/17.png";
+import Img1 from "../assets/1.png";
+import Img4 from "../assets/4.png";
+import Img3 from "../assets/3.png";
 
 export default function Construction() {
   const heroRef = useRef(null);
@@ -70,17 +73,17 @@ export default function Construction() {
       desc: "Lightweight BIM modelling for mobile devices.",
     },
     {
-      img: Placeholder,
+      img: Img1,
       title: "Digital Twins",
       desc: "Golden Thread tracking including Blockchain. Build a digital twin of your building in simple, easy to manage steps.",
     },
     {
-      img: Placeholder,
+      img: Img4,
       title: "Digital O&Ms",
       desc: "All of your operations and maintenance manuals for your onsite FM team, all together, in one place. AI enabled.",
     },
     {
-      img: Placeholder,
+      img: Img3,
       title: "Digital Training Guides",
       desc: "Use your digital twin to deliver onsite training guides & SOPs.",
     },

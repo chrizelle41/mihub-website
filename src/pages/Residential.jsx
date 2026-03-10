@@ -6,6 +6,7 @@ import residentialVideo from "../assets/residential.mp4";
 
 // PNG mockups
 import Img1 from "../assets/7.png";
+import Img3 from "../assets/2.png";
 import Img2 from "../assets/apartmentfinder.png";
 
 export default function Residential() {
@@ -54,24 +55,9 @@ export default function Residential() {
       desc: "A feature packed, sales app to promote your development in the AppStore or on Google Play",
     },
     {
-      img: Img1,
-      title: "Interactive Touch Screen Customer Tours",
-      desc: "Take your potential buyers on an interactive tour of your site,  visit all the amenities, make configuration choices,",
-    },
-    {
-      img: Img1,
+      img: Img3,
       title: "TheHomeUserGuide™",
       desc: "Everything your residents want to know in one simple app.  Help guides, notifications, owners’ manuals, certificates.  Available in multiple languages",
-    },
-    {
-      img: Img1,
-      title: "Digital O&Ms",
-      desc: "All of your operations and maintenance manuals for your onsite FM team, all together, in one place.  ",
-    },
-    {
-      img: Img1,
-      title: "Remote Damp & Mould Monitoring",
-      desc: "Working with the industry leader, ZapCarbon, we can give you remote damp and mould monitoring, to your own confidential dashboard",
     },
   ];
 
